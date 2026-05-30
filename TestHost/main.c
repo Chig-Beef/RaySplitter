@@ -10,23 +10,36 @@ int main() {
   RSScreen screenB;
 
   // Start both screens
+  printf("Init screens\n");
   RSScreenInit(&screenA);
   RSScreenInit(&screenB);
 
   // Open both screens
+  printf("Open screens\n");
   RSScreenOpen(&screenA);
   RSScreenOpen(&screenB);
 
+  printf("Register screens\n");
+  RSRegisterScreen(&screenA);
+  RSRegisterScreen(&screenB);
+
   // Start logic loop
+  printf("Starting loop\n");
   bool running = true;
+  int frameCount = 0;
   while (running) {
-    // ... Do stuff ...
-    running = false;
+    RSFrame();
+
+    frameCount++;
+    if (frameCount == 300) { // 5 seconds
+      running = false;
+    }
   }
 
   // Close both screens
-  RSScreenCloseWait(&screenA);
-  RSScreenCloseWait(&screenB);
+  printf("Closing\n");
+  RSScreenCloseForce(&screenA);
+  RSScreenCloseForce(&screenB);
 
   return 0;
 }

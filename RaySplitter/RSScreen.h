@@ -22,4 +22,6 @@ errno_t RSScreenCloseWait(RSScreen *screen);
 
 errno_t RSScreenCloseForce(RSScreen *screen);
 
+errno_t RSScreenFrame(RSScreen *screen);
+
 #endif

@@ -64,11 +64,25 @@ errno_t RSScreenOpen(RSScreen *screen) {
 
 errno_t RSScreenCloseWait(RSScreen *screen) {
   WaitForSingleObject(screen->process.hProcess, INFINITE);
-  return RSScreenCloseForce(screen);
+  CloseHandle(screen->process.hProcess);
+  CloseHandle(screen->process.hThread);
+  return 0;
 }
 
 errno_t RSScreenCloseForce(RSScreen *screen) {
+  // Terminate the process unconditionally
+  if (!TerminateProcess(screen->process.hProcess, 1)) {
+    printf("Error: TerminateProcess failed. Error code: %lu\n", GetLastError());
+    CloseHandle(screen->process.hProcess);
+    return 1;
+  }
+
   CloseHandle(screen->process.hProcess);
   CloseHandle(screen->process.hThread);
+  return 0;
+}
+
+// Flushes commands to screen
+errno_t RSScreenFrame(RSScreen *screen) {
   return 0;
 }
