@@ -3,12 +3,10 @@
 
 #include "winray.h"
 
-// Holds all the info for a given screen,
-// regardless of whether it is the main or sub
+// Holds all the info for a given screen
 typedef struct {
-  bool isMain; // Is this the main screen? (in which case, no extra logic)
-  STARTUPINFO start; // Info on how this scren started (if sub)
-  PROCESS_INFORMATION process; // The process this is running on (if sub)
+  STARTUPINFO start; // Info on how this scren started
+  PROCESS_INFORMATION process; // The process this is running on
 } RSScreen;
 
 errno_t RSScreenInit(RSScreen *screen);

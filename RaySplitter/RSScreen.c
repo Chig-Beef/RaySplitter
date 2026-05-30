@@ -1,32 +1,21 @@
 #include <corecrt.h>
+#include <raylib.h>
 #include <string.h>
 #include <stdio.h>
 
 #include "RSScreen.h"
 
-RSScreen *RSMainScreen = NULL;
-
 errno_t RSScreenInit(RSScreen *screen) {
-  if (!RSMainScreen) {
-    // Start as main screen
-    screen->isMain = true;
-
-    return 0;
-  }
-
-  // Start as sub
-  return RSScreenOpen(screen);
-}
-
-errno_t RSScreenOpen(RSScreen *screen) {
-  screen->isMain = false;
-
   // Init proc info
   memset(&screen->start, 0, sizeof(screen->start));
   screen->start.cb = sizeof(screen->start);
 
   memset(&screen->process, 0, sizeof(screen->process));
 
+  return 0;
+}
+
+errno_t RSScreenOpen(RSScreen *screen) {
   // Path to sub screen exe
   char commandLine[] = "./TestScreen/dev.exe";
 
