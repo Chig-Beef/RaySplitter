@@ -28,8 +28,12 @@ int main() {
   bool running = true;
   int frameCount = 0;
   while (running) {
-    RSFrame();
+    if (frameCount == 49) {
+      RSScreenDrawRectangle(&screenA, 60, 10, 50, 50, GREEN);
+      RSScreenDrawRectangle(&screenB, 60, 10, 50, 50, YELLOW);
+    }
 
+    RSFrame();
     frameCount++;
     if (frameCount == 300) { // 5 seconds
       running = false;

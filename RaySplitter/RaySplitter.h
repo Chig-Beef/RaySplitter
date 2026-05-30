@@ -3,6 +3,7 @@
 
 #include "RSScreen.h"
 #include "winray.h"
+#include "RSScreenCommands.h"
 
 // Call at the end of a frame to push commands to sub screens
 // Also waits the given amount of time (FPS)

@@ -2,6 +2,9 @@
 #define _RS_SCREEN_H_
 
 #include "winray.h"
+#include "RScommand.h"
+
+#define RSSCREEN_QUEUE_MAX_LEN 100
 
 // Holds all the info for a given screen
 typedef struct {
@@ -9,6 +12,10 @@ typedef struct {
   int width;
   int height;
   char *title;
+
+  // The queue to hold command info
+  RSCommand commandQueue[RSSCREEN_QUEUE_MAX_LEN];
+  int commandQueueLen;
 
   STARTUPINFO start; // Info on how this scren started
   PROCESS_INFORMATION process; // The process this is running on

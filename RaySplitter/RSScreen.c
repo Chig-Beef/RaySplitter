@@ -21,6 +21,9 @@ errno_t RSScreenInit(RSScreen *screen) {
   screen->width = defaultScreenWidth;
   screen->height = defaultScreenHeight;
 
+  // Empty queue
+  screen->commandQueueLen = 0;
+
   return 0;
 }
 
@@ -84,5 +87,16 @@ errno_t RSScreenCloseForce(RSScreen *screen) {
 
 // Flushes commands to screen
 errno_t RSScreenFrame(RSScreen *screen) {
+  // Iterate over each command to send
+  for (int i = 0; i < screen->commandQueueLen; ++i) {
+    // TODO: Send the command
+
+    // Free the command
+    RSCommandFree(&screen->commandQueue[i]);
+  }
+
+  // Clear the queue
+  screen->commandQueueLen = 0;
+
   return 0;
 }
