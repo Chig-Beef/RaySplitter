@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "RSScreen.h"
+#include "RSCommand.h"
 
 char defaultScreenTitle[] = "RaySplitter sub-screen";
 const int defaultScreenWidth = 320;
@@ -112,21 +113,25 @@ errno_t RSScreenCloseForce(RSScreen *screen) {
   return 0;
 }
 
+void RSScreenSendCommand(RSScreen *screen, RSCommand cmd) {
+  char *msg = RSCommandPackage(&cmd);
+
+  DWORD written;
+  WriteFile(
+      screen->childWriteable,
+      msg,
+      (DWORD)strlen(msg),
+      &written,
+      NULL);
+
+  free(msg);
+}
+
 // Flushes commands to screen
 errno_t RSScreenFrame(RSScreen *screen) {
   // Iterate over each command to send
   for (int i = 0; i < screen->commandQueueLen; ++i) {
-    // TODO: Send the command
-    const char *msg = "Hello child process!\n";
-
-    DWORD written;
-    WriteFile(
-        screen->childWriteable,
-        msg,
-        (DWORD)strlen(msg),
-        &written,
-        NULL);
-    printf("Wrote %li bytes\n", written);
+    RSScreenSendCommand(screen, screen->commandQueue[i]);
 
     // Free the command
     RSCommandFree(&screen->commandQueue[i]);

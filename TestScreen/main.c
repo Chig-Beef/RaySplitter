@@ -38,6 +38,74 @@ bool checkCmdAvailable() {
   return false;
 }
 
+void drawRectangleWrapper(int argc, char **argv) {
+  if (argc != 6) {
+    printf("Bad num of args!\n");
+    return;
+  }
+
+
+}
+
+void executeCmd(char *cmd) {
+  // How many args?
+  int argc = 1;
+  for (char *p = cmd; *p; ++p) if (*p == ' ') ++argc;
+
+  // Allocate buffer for args
+  char **argv = malloc(argc*sizeof(char*));
+
+  // Load in each arg
+  int i = 0;
+  int j = 0;
+  char *p = cmd;
+  for (p = cmd; *p; ++p) {
+    // End of arg
+    if (*p != ' ') {
+      continue;
+    }
+
+    int size = p-(cmd+j);
+
+    argv[i] = malloc(size+1);
+    int n = 0;
+    for (char* k = cmd+j; k < p; ++k) {
+      argv[i][n++] = *k;
+    }
+    argv[i][size] = 0;
+
+    ++i;
+    j = p-cmd+1;
+  }
+
+  // Last arg
+  int size = p-(cmd+j);
+
+  argv[i] = malloc(size+1);
+  int n = 0;
+  for (char* k = cmd+j; k < p; ++k) {
+    argv[i][n++] = *k;
+  }
+  argv[i][size] = 0;
+
+  // Show each arg
+  for (int i = 0; i < argc; ++i) {
+    printf("ARG: %s\n", argv[i]);
+  }
+
+  // Determine what to do
+  if (argv[0][0] == '0') {
+    printf("Draw rectangle!\n");
+    drawRectangleWrapper(argc, argv);
+  }
+
+  // Free args
+  for (int i = 0; i < argc; ++i) {
+    free(argv[i]);
+  }
+  free(argv);
+}
+
 int main(int argc, char **argv) {
   printf("Starting sub screen\n");
 
@@ -65,9 +133,12 @@ int main(int argc, char **argv) {
       // Read the line in
       char line[256];
       fgets(line, sizeof(line), stdin);
+
+      // Replace newline with end
+      for (int i = 0; i < 256; ++i) if (line[i] == '\r' || line[i] == '\n') line[i] = 0;
       
-      // Test, show it
-      printf("You typed: %s", line);
+      // Execute
+      executeCmd(line);
     }
 
     DrawRectangle(10, 10, 50, 50, BLUE);

@@ -14,4 +14,6 @@ typedef struct {
 
 void RSCommandFree(RSCommand *cmd);
 
+char *RSCommandPackage(RSCommand *cmd);
+
 #endif
