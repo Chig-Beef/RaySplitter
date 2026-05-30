@@ -5,6 +5,11 @@
 
 // Holds all the info for a given screen
 typedef struct {
+  // Basic information (this is expected to be done outside)
+  int width;
+  int height;
+  char *title;
+
   STARTUPINFO start; // Info on how this scren started
   PROCESS_INFORMATION process; // The process this is running on
 } RSScreen;

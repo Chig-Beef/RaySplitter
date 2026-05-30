@@ -5,6 +5,10 @@
 
 #include "RSScreen.h"
 
+char defaultScreenTitle[] = "RaySplitter sub-screen";
+const int defaultScreenWidth = 320;
+const int defaultScreenHeight = 240;
+
 errno_t RSScreenInit(RSScreen *screen) {
   // Init proc info
   memset(&screen->start, 0, sizeof(screen->start));
@@ -12,17 +16,31 @@ errno_t RSScreenInit(RSScreen *screen) {
 
   memset(&screen->process, 0, sizeof(screen->process));
 
+  // Default props
+  screen->title = defaultScreenTitle;
+  screen->width = defaultScreenWidth;
+  screen->height = defaultScreenHeight;
+
   return 0;
 }
 
+#define MAX_CMD_SIZE 100
+
 errno_t RSScreenOpen(RSScreen *screen) {
   // Path to sub screen exe
-  char commandLine[] = "./TestScreen/dev.exe";
+  char command[] = "./TestScreen/dev.exe";
+
+  char finalCommand[MAX_CMD_SIZE];
+
+  if (!sprintf_s(finalCommand, MAX_CMD_SIZE, "%s \"%s\" %i %i", command, screen->title, screen->width, screen->height)) {
+    printf("Couldn't format final command\n");
+    return 1;
+  }
 
   // Run the exe
   BOOL success = CreateProcess(
     NULL,
-    commandLine,
+    finalCommand,
     NULL,
     NULL,
     FALSE,
