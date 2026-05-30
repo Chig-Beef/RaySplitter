@@ -17,6 +17,7 @@ typedef struct {
   RSCommand commandQueue[RSSCREEN_QUEUE_MAX_LEN];
   int commandQueueLen;
 
+  HANDLE childWriteable; // The handle to send commands to
   STARTUPINFO start; // Info on how this scren started
   PROCESS_INFORMATION process; // The process this is running on
 } RSScreen;

@@ -13,6 +13,7 @@ errno_t RSScreenInit(RSScreen *screen) {
   // Init proc info
   memset(&screen->start, 0, sizeof(screen->start));
   screen->start.cb = sizeof(screen->start);
+  screen->start.dwFlags = STARTF_USESTDHANDLES;
 
   memset(&screen->process, 0, sizeof(screen->process));
 
@@ -30,6 +31,32 @@ errno_t RSScreenInit(RSScreen *screen) {
 #define MAX_CMD_SIZE 100
 
 errno_t RSScreenOpen(RSScreen *screen) {
+  SECURITY_ATTRIBUTES sa = {
+    .nLength = sizeof(SECURITY_ATTRIBUTES),
+    .lpSecurityDescriptor = NULL,
+    .bInheritHandle = TRUE
+  };
+
+  HANDLE childStdinRead = NULL;
+  screen->childWriteable = NULL;
+
+  // Create pipe for child's stdin
+  if (!CreatePipe(&childStdinRead, &screen->childWriteable, &sa, 0))
+  {
+    printf("CreatePipe failed\n");
+    return 1;
+  }
+
+  // Parent should not accidentally pass write end to child
+  SetHandleInformation(screen->childWriteable, HANDLE_FLAG_INHERIT, 0);
+
+  // Child's stdin comes from our pipe
+  screen->start.hStdInput = childStdinRead;
+
+  // Child's stdout/stderr can go wherever you want
+  screen->start.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+  screen->start.hStdError  = GetStdHandle(STD_ERROR_HANDLE);
+
   // Path to sub screen exe
   char command[] = "./TestScreen/dev.exe";
 
@@ -46,7 +73,7 @@ errno_t RSScreenOpen(RSScreen *screen) {
     finalCommand,
     NULL,
     NULL,
-    FALSE,
+    TRUE,
     0,
     NULL,
     NULL,
@@ -90,6 +117,16 @@ errno_t RSScreenFrame(RSScreen *screen) {
   // Iterate over each command to send
   for (int i = 0; i < screen->commandQueueLen; ++i) {
     // TODO: Send the command
+    const char *msg = "Hello child process!\n";
+
+    DWORD written;
+    WriteFile(
+        screen->childWriteable,
+        msg,
+        (DWORD)strlen(msg),
+        &written,
+        NULL);
+    printf("Wrote %li bytes\n", written);
 
     // Free the command
     RSCommandFree(&screen->commandQueue[i]);
