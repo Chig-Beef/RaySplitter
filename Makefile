@@ -6,4 +6,3 @@ build:
 
 run:
 	TestHost/dev
-	TestScreen/dev
