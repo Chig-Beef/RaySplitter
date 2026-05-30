@@ -5,6 +5,8 @@ typedef enum {
   FC_DRAW_RECTANGLE,
 } FuncCode;
 
+#define RS_NUM_FUNCS 1
+
 // A single instruction for the target machine
 typedef struct {
   FuncCode func;
