@@ -29,7 +29,10 @@ int main() {
   int frameCount = 0;
   while (running) {
     RSScreenDrawRectangle(&screenA, 60, 10, 50, 50, GREEN);
+    RSScreenDrawCircle(&screenA, 100, 100, 50, BLUE);
+
     RSScreenDrawRectangle(&screenB, 60, 10, 50, 50, YELLOW);
+    RSScreenDrawCircle(&screenB, 100, 100, 50, RED);
 
     RSFrame();
     frameCount++;

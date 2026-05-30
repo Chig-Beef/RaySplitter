@@ -65,17 +65,15 @@ void executeCmd(char *cmd) {
 
 void attemptCmdExecute() {
   // Is there even anything to execute?
-  if (!checkCmdAvailable()) {
-    return;
+  while (checkCmdAvailable()) {
+    // Read the line in
+    char line[256];
+    fgets(line, sizeof(line), stdin);
+
+    // Replace newline with end
+    for (int i = 0; i < 256; ++i) if (line[i] == '\r' || line[i] == '\n') line[i] = 0;
+    
+    // Execute
+    executeCmd(line);
   }
-
-  // Read the line in
-  char line[256];
-  fgets(line, sizeof(line), stdin);
-
-  // Replace newline with end
-  for (int i = 0; i < 256; ++i) if (line[i] == '\r' || line[i] == '\n') line[i] = 0;
-  
-  // Execute
-  executeCmd(line);
 }

@@ -54,3 +54,27 @@ void RSScreenDrawRectangle(RSScreen *screen, int x, int y, int width, int height
 
   screen->commandQueue[screen->commandQueueLen++] = cmd;
 }
+
+
+void RSScreenDrawCircle(RSScreen *screen, int x, int y, int radius, Color clr) {
+  if (screen->commandQueueLen == RSSCREEN_QUEUE_MAX_LEN) {
+    printf("Too many commands attempted in a single frame\n");
+    return;
+  }
+
+  RSCommand cmd;
+  cmd.func = FC_DRAW_CIRCLE;
+  cmd.argc = 4;
+  cmd.argv = malloc(4*sizeof(char*));
+  if (!cmd.argv) {
+    printf("Couldn't allocate argv buffer for cmd\n");
+    return;
+  }
+
+  cmd.argv[0] = argFromInt(x);
+  cmd.argv[1] = argFromInt(y);
+  cmd.argv[2] = argFromInt(radius);
+  cmd.argv[3] = argFromColor(clr);
+
+  screen->commandQueue[screen->commandQueueLen++] = cmd;
+}

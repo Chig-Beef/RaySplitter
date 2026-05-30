@@ -53,8 +53,23 @@ void drawRectangleWrapper(int argc, char **argv) {
   DrawRectangle(x, y, w, h, clr);
 }
 
+void drawCircleWrapper(int argc, char **argv) {
+  if (argc != 4) {
+    printf("Bad num of args!\n");
+    return;
+  }
+
+  int x = argToInt(argv[0]);
+  int y = argToInt(argv[1]);
+  int r = argToInt(argv[2]);
+  Color clr = argToColor(argv[3]);
+
+  DrawCircle(x, y, r, clr);
+}
+
 FuncWrapper funcs[RS_NUM_FUNCS] = {
   drawRectangleWrapper,
+  drawCircleWrapper,
 };
 
 FuncWrapper getFuncFromCode(int code) {

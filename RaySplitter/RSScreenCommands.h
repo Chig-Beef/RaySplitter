@@ -6,4 +6,6 @@
 
 void RSScreenDrawRectangle(RSScreen *screen, int x, int y, int width, int height, Color clr);
 
+void RSScreenDrawCircle(RSScreen *screen, int x, int y, int radius, Color clr);
+
 #endif
