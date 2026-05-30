@@ -1,3 +1,4 @@
+#include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "../RaySplitter/winray.h"
@@ -38,13 +39,50 @@ bool checkCmdAvailable() {
   return false;
 }
 
+int argToInt(char *arg) {
+  return atoi(arg);
+}
+
+Color argToColor(char *arg) {
+  Color c;
+
+  char temp[10];
+  
+  int i = 0;
+  char *p = arg;
+  int n = 0;
+
+  while (*p) {
+    if (*p == '-') {
+      // End
+      temp[i] = 0;
+
+      ((unsigned char*)&c)[n++] = atoi(temp);
+
+      i = 0;
+    } else {
+      temp[i++] = *p;
+    }
+    
+    ++p;
+  }
+
+  return c;
+}
+
 void drawRectangleWrapper(int argc, char **argv) {
-  if (argc != 6) {
+  if (argc != 5) {
     printf("Bad num of args!\n");
     return;
   }
 
+  int x = argToInt(argv[0]);
+  int y = argToInt(argv[1]);
+  int w = argToInt(argv[2]);
+  int h = argToInt(argv[3]);
+  Color clr = argToColor(argv[4]);
 
+  DrawRectangle(x, y, w, h, clr);
 }
 
 void executeCmd(char *cmd) {
@@ -89,14 +127,14 @@ void executeCmd(char *cmd) {
   argv[i][size] = 0;
 
   // Show each arg
-  for (int i = 0; i < argc; ++i) {
-    printf("ARG: %s\n", argv[i]);
-  }
+  printf("ARGC: %i\n", argc);
+  // for (int i = 0; i < argc; ++i) {
+  //   printf("ARG: %s\n", argv[i]);
+  // }
 
   // Determine what to do
   if (argv[0][0] == '0') {
-    printf("Draw rectangle!\n");
-    drawRectangleWrapper(argc, argv);
+    drawRectangleWrapper(argc-1, argv+1);
   }
 
   // Free args
