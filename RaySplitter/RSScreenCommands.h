@@ -25,7 +25,7 @@ void RSScreenDrawLineDashed(RSScreen *screen, Vector2 startPos, Vector2 endPos, 
 
 void RSScreenDrawCircle(RSScreen *screen, int centerX, int centerY, float radius, Color color);
 void RSScreenDrawCircleV(RSScreen *screen, Vector2 center, float radius, Color color);
-void RSScreenDrawCircleGradient(RSScreen *screen, Vector2 center, float radius, Color color);
+void RSScreenDrawCircleGradient(RSScreen *screen, Vector2 center, float radius, Color inner, Color outer);
 void RSScreenDrawCircleSector(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color);
 void RSScreenDrawCircleSectorLines(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color);
 void RSScreenDrawCircleLines(RSScreen *screen, int centerX, int centerY, float radius, Color color);
@@ -68,15 +68,11 @@ void RSScreenDrawSplineSegmentCubic(RSScreen *screen, Vector2 p1, Vector2 p2, Ve
 // R_TEXTURES
 
 // R_TEXT
-void RSScreenDrawFPS(RSScreen *screen, int x, int y, int width, int height, Color color);
+void RSScreenDrawFPS(RSScreen *screen, int posX, int posY);
 
-void RSScreenDrawText(RSScreen *screen, int x, int y, int width, int height, Color color);
-void RSScreenDrawTextEx(RSScreen *screen, int x, int y, int width, int height, Color color);
-void RSScreenDrawTextPro(RSScreen *screen, int x, int y, int width, int height, Color color);
-void RSScreenDrawTextCodepoint(RSScreen *screen, int x, int y, int width, int height, Color color);
-void RSScreenDrawTextCodepoints(RSScreen *screen, int x, int y, int width, int height, Color color);
+void RSScreenDrawText(RSScreen *screen, int posX, int posY, int fontSize, Color color);
 
-void RSScreenSetTextLineSpacing(RSScreen *screen, int x, int y, int width, int height, Color color);
+void RSScreenSetTextLineSpacing(RSScreen *screen, int spacing);
 
 // R_MODELS
   

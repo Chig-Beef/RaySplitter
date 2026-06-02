@@ -111,6 +111,112 @@ errno_t RSCommandPopulate(RSCommand *cmd, int argc, void **argv, RSArgType *argt
   return 0;
 }
 
+ArgType *funcArgTypes[RS_NUM_FUNCS] = {
+  {}, // FC_SET_WINDOW_TITLE
+  {}, // FC_SET_WINDOW_POSITION
+  {}, // FC_SET_WINDOW_SIZE
+  {}, // FC_CLEAR_BACKGROUND
+  {}, // FC_TAKE_SCREENSHOT
+  {}, // FC_DRAW_PIXEL
+  {}, // FC_DRAW_PIXEL_V
+  {}, // FC_DRAW_LINE
+  {}, // FC_DRAW_LINE_V
+  {}, // FC_DRAW_LINE_EX
+  {}, // FC_DRAW_LINE_BEZIER
+  {}, // DC_DRAW_LINE_DASHED
+  {AT_INT, AT_INT, AT_FLOAT, AT_COLOR}, // FC_DRAW_CIRCLE
+  {AT_VECTOR2, AT_FLOAT, AT_COLOR}, // FC_DRAW_CIRCLE_V
+  {AT_VECTOR2, AT_FLOAT, AT_COLOR}, // FC_DRAW_CIRCLE_GRADIENT
+  {AT_VECTOR2, AT_FLOAT, AT_FLOAT, AT_FLOAT, AT_INT, AT_COLOR}, // FC_DRAW_CIRCLE_SECTOR
+  {}, // FC_DRAW_CIRCLE_SECTOR_LINES
+  {}, // FC_DRAW_CIRCLE_LINES
+  {}, // FC_DRAW_CIRCLE_LINES_V
+  {}, // FC_DRAW_ELLIPSE
+  {}, // FC_DRAW_ELLIPSE_V
+  {}, // FC_DRAW_ELLIPSE_LINES
+  {}, // FC_DRAW_ELLIPSE_LINES_V
+  {}, // FC_DRAW_RING
+  {}, // FC_DRAW_RING_LINES
+  {AT_INT, AT_INT, AT_INT, AT_INT, AT_COLOR}, // FC_DRAW_RECTANGLE
+  {}, // FC_DRAW_RECTANGLE_V
+  {}, // FC_DRAW_RECTANGLE_REC
+  {}, // FC_DRAW_RECTANGLE_PRO
+  {}, // FC_DRAW_RECTANGLE_GRADIENT_V
+  {}, // FC_DRAW_RECTANGLE_GRADIENT_H
+  {}, // FC_DRAW_RECTANGLE_GRADIENT_EX
+  {}, // FC_DRAW_RECTANGLE_LINES
+  {}, // FC_DRAW_RECTANGLE_LINES_EX
+  {}, // FC_DRAW_RECTANGLE_ROUNDED
+  {}, // FC_DRAW_RECTANGLE_ROUNDED_LINES
+  {}, // FC_DRAW_RECTANGLE_ROUNDED_LINES_EX
+  {}, // FC_DRAW_TRIANGLE
+  {}, // FC_DRAW_TRIANGLE_LINES
+  {}, // FC_DRAW_POLY
+  {}, // FC_DRAW_POLY_LINES
+  {}, // FC_DRAW_POLY_LINES_EX
+  {}, // FC_DRAW_SPLINE_SEGMENT_LINEAR
+  {}, // FC_DRAW_SPLINE_SEGMENT_BASIS
+  {}, // FC_DRAW_SPLINE_SEGMENT_CATMULL_ROM
+  {}, // FC_DRAW_SPLINE_SEGMENT_BEZIER_QUADRATIC
+  {}, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
+  {}, // FC_DRAW_FPS
+  {}, // FC_DRAW_TEXT
+  {}, // FC_SET_TEXT_LINE_SPACING
+};
+
+int funcArgc[RS_NUM_FUNCS] = {
+  1, // FC_SET_WINDOW_TITLE
+  2, // FC_SET_WINDOW_POSITION
+  2, // FC_SET_WINDOW_SIZE
+  1, // FC_CLEAR_BACKGROUND
+  1, // FC_TAKE_SCREENSHOT
+  3, // FC_DRAW_PIXEL
+  2, // FC_DRAW_PIXEL_V
+  5, // FC_DRAW_LINE
+  3, // FC_DRAW_LINE_V
+  4, // FC_DRAW_LINE_EX
+  4, // FC_DRAW_LINE_BEZIER
+  5, // DC_DRAW_LINE_DASHED
+  4, // FC_DRAW_CIRCLE
+  3, // FC_DRAW_CIRCLE_V
+  4, // FC_DRAW_CIRCLE_GRADIENT
+  6, // FC_DRAW_CIRCLE_SECTOR
+  6, // FC_DRAW_CIRCLE_SECTOR_LINES
+  4, // FC_DRAW_CIRCLE_LINES
+  3, // FC_DRAW_CIRCLE_LINES_V
+  5, // FC_DRAW_ELLIPSE
+  4, // FC_DRAW_ELLIPSE_V
+  5, // FC_DRAW_ELLIPSE_LINES
+  4, // FC_DRAW_ELLIPSE_LINES_V
+  7, // FC_DRAW_RING
+  7, // FC_DRAW_RING_LINES
+  5, // FC_DRAW_RECTANGLE
+  3, // FC_DRAW_RECTANGLE_V
+  2, // FC_DRAW_RECTANGLE_REC
+  4, // FC_DRAW_RECTANGLE_PRO
+  6, // FC_DRAW_RECTANGLE_GRADIENT_V
+  6, // FC_DRAW_RECTANGLE_GRADIENT_H
+  5, // FC_DRAW_RECTANGLE_GRADIENT_EX
+  5, // FC_DRAW_RECTANGLE_LINES
+  3, // FC_DRAW_RECTANGLE_LINES_EX
+  4, // FC_DRAW_RECTANGLE_ROUNDED
+  4, // FC_DRAW_RECTANGLE_ROUNDED_LINES
+  5, // FC_DRAW_RECTANGLE_ROUNDED_LINES_EX
+  4, // FC_DRAW_TRIANGLE
+  4, // FC_DRAW_TRIANGLE_LINES
+  5, // FC_DRAW_POLY
+  5, // FC_DRAW_POLY_LINES
+  6, // FC_DRAW_POLY_LINES_EX
+  4, // FC_DRAW_SPLINE_SEGMENT_LINEAR
+  6, // FC_DRAW_SPLINE_SEGMENT_BASIS
+  6, // FC_DRAW_SPLINE_SEGMENT_CATMULL_ROM
+  5, // FC_DRAW_SPLINE_SEGMENT_BEZIER_QUADRATIC
+  6, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
+  2, // FC_DRAW_FPS
+  5, // FC_DRAW_TEXT
+  1, // FC_SET_TEXT_LINE_SPACING
+};
+
 void RSDeployCommand(RSScreen *screen, FuncCode func, int argc, void **argv, RSArgType *argt) {
   RSCommand cmd;
 
@@ -185,22 +291,24 @@ void RSScreenDrawCircleV(RSScreen *screen, Vector2 center, float radius, Color c
   RSDeployCommand(screen, FC_DRAW_CIRCLE_V, 3, arv, argt);
 }
 
-void RSScreenDrawCircleGradient(RSScreen *screen, Vector2 center, float radius, Color color) {
+void RSScreenDrawCircleGradient(RSScreen *screen, Vector2 center, float radius, Color inner, Color outer) {
   // Line up args in an array
-  void *argv[3] = {
+  void *argv[4] = {
     &center,
     &radius,
-    &color,
+    &inner,
+    &outer,
   };
 
   // Specify the types of each arg
-  RSArgType argt[3] = {
+  RSArgType argt[4] = {
     AT_VECTOR2,
     AT_FLOAT,
     AT_COLOR,
+    AT_COLOR,
   };
 
-  RSDeployCommand(screen, FC_DRAW_CIRCLE_GRADIENT, 3, arv, argt);
+  RSDeployCommand(screen, FC_DRAW_CIRCLE_GRADIENT, 4, arv, argt);
 }
 
 void RSScreenDrawCircleSector(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color) {
@@ -289,15 +397,12 @@ void RSScreenDrawSplineSegmentCubic(RSScreen *screen, Vector2 p1, Vector2 p2, Ve
 // R_TEXTURES
 
 // R_TEXT
-void RSScreenDrawFPS(RSScreen *screen, int x, int y, int width, int height, Color color);
+void RSScreenDrawFPS(RSScreen *screen, int posX, int posY);
 
-void RSScreenDrawText(RSScreen *screen, int x, int y, int width, int height, Color color);
-void RSScreenDrawTextEx(RSScreen *screen, int x, int y, int width, int height, Color color);
-void RSScreenDrawTextPro(RSScreen *screen, int x, int y, int width, int height, Color color);
-void RSScreenDrawTextCodepoint(RSScreen *screen, int x, int y, int width, int height, Color color);
-void RSScreenDrawTextCodepoints(RSScreen *screen, int x, int y, int width, int height, Color color);
+void RSScreenDrawText(RSScreen *screen, int posX, int posY, int fontSize, Color color);
 
-void RSScreenSetTextLineSpacing(RSScreen *screen, int x, int y, int width, int height, Color color);
+void RSScreenSetTextLineSpacing(RSScreen *screen, int spacing);
+
 
 // R_MODELS
   

@@ -64,10 +64,6 @@ typedef enum {
   // R_TEXT
   FC_DRAW_FPS,
   FC_DRAW_TEXT,
-  FC_DRAW_TEXT_EX,
-  FC_DRAW_TEXT_PRO,
-  FC_DRAW_TEXT_CODEPOINT,
-  FC_DRAW_TEXT_CODEPOINTS,
   FC_SET_TEXT_LINE_SPACING,
 
   // R_MODELS
@@ -75,7 +71,7 @@ typedef enum {
   // R_AUDIO
 } FuncCode;
 
-#define RS_NUM_FUNCS 2
+#define RS_NUM_FUNCS 50
 
 // A single instruction for the target machine
 typedef struct {
