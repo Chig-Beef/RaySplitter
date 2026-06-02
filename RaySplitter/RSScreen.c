@@ -142,3 +142,7 @@ errno_t RSScreenFrame(RSScreen *screen) {
 
   return 0;
 }
+
+bool RSScreenQueueFull(RSScreen *screen) {
+  return screen->commandQueueLen == RSSCREEN_QUEUE_MAX_LEN;
+}

@@ -32,4 +32,6 @@ errno_t RSScreenCloseForce(RSScreen *screen);
 
 errno_t RSScreenFrame(RSScreen *screen);
 
+bool RSScreenQueueFull(RSScreen *screen);
+
 #endif
