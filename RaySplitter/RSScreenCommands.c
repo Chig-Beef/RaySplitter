@@ -6,6 +6,7 @@
 #include "RSScreenCommands.h"
 #include "RSCommand.h"
 #include "RSScreen.h"
+#include "RScommand.h"
 
 typedef enum {
   AT_INT,
@@ -217,8 +218,17 @@ int funcArgc[RS_NUM_FUNCS] = {
   1, // FC_SET_TEXT_LINE_SPACING
 };
 
-void RSDeployCommand(RSScreen *screen, FuncCode func, int argc, void **argv, RSArgType *argt) {
+void RSDeployCommand(RSScreen *screen, FuncCode func, void **argv) {
+  if (func >= RS_NUM_FUNCS) {
+    printf("Invalid func code given\n");
+    return;
+  }
+
   RSCommand cmd;
+
+  // Get some info about this func
+  const int argc = funcArgc[func];
+  ArgType *argt = funcArgTypes[func];
 
   if (RSCommandInit(&cmd, argc, func)) {
     printf("Couldn't initialise command\n");
@@ -254,85 +264,23 @@ void RSScreenDrawLineBezier(RSScreen *screen, Vector2 startPos, Vector2 endPos, 
 void RSScreenDrawLineDashed(RSScreen *screen, Vector2 startPos, Vector2 endPos, int dashSize, int spaceSize, Color color);
 
 void RSScreenDrawCircle(RSScreen *screen, int centerX, int centerY, float radius, Color color) {
-  // Line up args in an array
-  void *argv[4] = {
-    &centerX,
-    &centerY,
-    &radius,
-    &color,
-  };
-
-  // Specify the types of each arg
-  RSArgType argt[4] = {
-    AT_INT,
-    AT_INT,
-    AT_FLOAT,
-    AT_COLOR,
-  };
-
-  RSDeployCommand(screen, FC_DRAW_CIRCLE, 4, arv, argt);
+  void *argv[4] = {&centerX, &centerY, &radius, &color};
+  RSDeployCommand(screen, FC_DRAW_CIRCLE, argv);
 }
 
 void RSScreenDrawCircleV(RSScreen *screen, Vector2 center, float radius, Color color) {
-  // Line up args in an array
-  void *argv[3] = {
-    &center,
-    &radius,
-    &color,
-  };
-
-  // Specify the types of each arg
-  RSArgType argt[3] = {
-    AT_VECTOR2,
-    AT_FLOAT,
-    AT_COLOR,
-  };
-
-  RSDeployCommand(screen, FC_DRAW_CIRCLE_V, 3, arv, argt);
+  void *argv[3] = {&center, &radius, &color};
+  RSDeployCommand(screen, FC_DRAW_CIRCLE_V, argv);
 }
 
 void RSScreenDrawCircleGradient(RSScreen *screen, Vector2 center, float radius, Color inner, Color outer) {
-  // Line up args in an array
-  void *argv[4] = {
-    &center,
-    &radius,
-    &inner,
-    &outer,
-  };
-
-  // Specify the types of each arg
-  RSArgType argt[4] = {
-    AT_VECTOR2,
-    AT_FLOAT,
-    AT_COLOR,
-    AT_COLOR,
-  };
-
-  RSDeployCommand(screen, FC_DRAW_CIRCLE_GRADIENT, 4, arv, argt);
+  void *argv[4] = {&center, &radius, &inner, &outer};
+  RSDeployCommand(screen, FC_DRAW_CIRCLE_GRADIENT, argv);
 }
 
 void RSScreenDrawCircleSector(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color) {
-  // Line up args in an array
-  void *argv[6] = {
-    &center,
-    &radius,
-    &startAngle,
-    &endAngle,
-    &segments,
-    &color,
-  };
-
-  // Specify the types of each arg
-  RSArgType argt[6] = {
-    AT_VECTOR2,
-    AT_FLOAT,
-    AT_FLOAT,
-    AT_FLOAT,
-    AT_INT,
-    AT_COLOR,
-  };
-
-  RSDeployCommand(screen, FC_DRAW_CIRCLE_SECTOR, 6, arv, argt);
+  void *argv[6] = {&center, &radius, &startAngle, &endAngle, &segments, &color};
+  RSDeployCommand(screen, FC_DRAW_CIRCLE_SECTOR, argv);
 }
 
 void RSScreenDrawCircleSectorLines(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color);
@@ -348,25 +296,8 @@ void RSScreenDrawRing(RSScreen *screen, Vector2 center, float innerRadius, float
 void RSScreenDrawRingLines(RSScreen *screen, Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color);
 
 void RSScreenDrawRectangle(RSScreen *screen, int posX, int posY, int width, int height, Color color) {
-  // Line up args in an array
-  void *argv[5] = {
-    &posX,
-    &posY,
-    &width,
-    &height,
-    &color,
-  };
-
-  // Specify the types of each arg
-  RSArgType argt[5] = {
-    AT_INT,
-    AT_INT,
-    AT_INT,
-    AT_INT,
-    AT_COLOR,
-  };
-
-  RSDeployCommand(screen, FC_DRAW_RECTANGLE, 5, arv, argt);
+  void *argv[5] = {&posX, &posY, &width, &height, &color};
+  RSDeployCommand(screen, FC_DRAW_RECTANGLE, argv);
 }
 
 void RSScreenDrawRectangleV(RSScreen *screen, Vector2 position, Vector2 size, Color color);
