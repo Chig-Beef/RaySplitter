@@ -124,7 +124,22 @@ void RSScreenDrawCircleGradient(RSScreen *screen, Vector2 center, float radius, 
   RSScreenQueuePush(screen, cmd);
 }
 
-void RSScreenDrawCircleSector(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color);
+void RSScreenDrawCircleSector(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color) {
+  RSCommand cmd;
+  if (RSCommandInit(&cmd, 6, FC_DRAW_CIRCLE_SECTOR)) {
+    return;
+  }
+
+  cmd.argv[0] = argFromVector2(center);
+  cmd.argv[1] = argFromFloat(radius);
+  cmd.argv[2] = argFromFloat(startAngle);
+  cmd.argv[3] = argFromFloat(endAngle);
+  cmd.argv[4] = argFromInt(segments);
+  cmd.argv[5] = argFromColor(color);
+
+  RSScreenQueuePush(screen, cmd);
+}
+
 void RSScreenDrawCircleSectorLines(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color);
 void RSScreenDrawCircleLines(RSScreen *screen, int centerX, int centerY, float radius, Color color);
 void RSScreenDrawCircleLinesV(RSScreen *screen, Vector2 center, float radius, Color color);
