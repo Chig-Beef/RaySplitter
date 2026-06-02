@@ -111,6 +111,23 @@ errno_t RSCommandPopulate(RSCommand *cmd, int argc, void **argv, RSArgType *argt
   return 0;
 }
 
+void RSDeployCommand(RSScreen *screen, FuncCode func, int argc, void **argv, RSArgType *argt) {
+  RSCommand cmd;
+
+  if (RSCommandInit(&cmd, argc, func)) {
+    printf("Couldn't initialise command\n");
+    return;
+  }
+
+  errno_t err = RSCommandPopulate(&cmd, argc, argv, argt);
+  if (err) {
+    printf("Couldn't populate command\n");
+    return;
+  }
+
+  RSScreenQueuePush(screen, cmd);
+}
+
 // R_CORE
 void RSScreenSetWindowTitle(RSScreen *screen, const char *title);
 void RSScreenSetWindowPosition(RSScreen *screen, int x, int y);
@@ -131,11 +148,6 @@ void RSScreenDrawLineBezier(RSScreen *screen, Vector2 startPos, Vector2 endPos, 
 void RSScreenDrawLineDashed(RSScreen *screen, Vector2 startPos, Vector2 endPos, int dashSize, int spaceSize, Color color);
 
 void RSScreenDrawCircle(RSScreen *screen, int centerX, int centerY, float radius, Color color) {
-  RSCommand cmd;
-  if (RSCommandInit(&cmd, 4, FC_DRAW_CIRCLE)) {
-    return;
-  }
-
   // Line up args in an array
   void *argv[4] = {
     &centerX,
@@ -152,20 +164,10 @@ void RSScreenDrawCircle(RSScreen *screen, int centerX, int centerY, float radius
     AT_COLOR,
   };
 
-  errno_t err = RSCommandPopulate(&cmd, 4, argv, argt);
-  if (err) {
-    return;
-  }
-
-  RSScreenQueuePush(screen, cmd);
+  RSDeployCommand(screen, FC_DRAW_CIRCLE, 4, arv, argt);
 }
 
 void RSScreenDrawCircleV(RSScreen *screen, Vector2 center, float radius, Color color) {
-  RSCommand cmd;
-  if (RSCommandInit(&cmd, 3, FC_DRAW_CIRCLE_V)) {
-    return;
-  }
-
   // Line up args in an array
   void *argv[3] = {
     &center,
@@ -180,20 +182,10 @@ void RSScreenDrawCircleV(RSScreen *screen, Vector2 center, float radius, Color c
     AT_COLOR,
   };
 
-  errno_t err = RSCommandPopulate(&cmd, 3, argv, argt);
-  if (err) {
-    return;
-  }
-
-  RSScreenQueuePush(screen, cmd);
+  RSDeployCommand(screen, FC_DRAW_CIRCLE_V, 3, arv, argt);
 }
 
 void RSScreenDrawCircleGradient(RSScreen *screen, Vector2 center, float radius, Color color) {
-  RSCommand cmd;
-  if (RSCommandInit(&cmd, 3, FC_DRAW_CIRCLE_GRADIENT)) {
-    return;
-  }
-
   // Line up args in an array
   void *argv[3] = {
     &center,
@@ -208,20 +200,10 @@ void RSScreenDrawCircleGradient(RSScreen *screen, Vector2 center, float radius, 
     AT_COLOR,
   };
 
-  errno_t err = RSCommandPopulate(&cmd, 3, argv, argt);
-  if (err) {
-    return;
-  }
-
-  RSScreenQueuePush(screen, cmd);
+  RSDeployCommand(screen, FC_DRAW_CIRCLE_GRADIENT, 3, arv, argt);
 }
 
 void RSScreenDrawCircleSector(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color) {
-  RSCommand cmd;
-  if (RSCommandInit(&cmd, 6, FC_DRAW_CIRCLE_SECTOR)) {
-    return;
-  }
-
   // Line up args in an array
   void *argv[6] = {
     &center,
@@ -242,12 +224,7 @@ void RSScreenDrawCircleSector(RSScreen *screen, Vector2 center, float radius, fl
     AT_COLOR,
   };
 
-  errno_t err = RSCommandPopulate(&cmd, 6, argv, argt);
-  if (err) {
-    return;
-  }
-
-  RSScreenQueuePush(screen, cmd);
+  RSDeployCommand(screen, FC_DRAW_CIRCLE_SECTOR, 6, arv, argt);
 }
 
 void RSScreenDrawCircleSectorLines(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color);
@@ -263,17 +240,6 @@ void RSScreenDrawRing(RSScreen *screen, Vector2 center, float innerRadius, float
 void RSScreenDrawRingLines(RSScreen *screen, Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color);
 
 void RSScreenDrawRectangle(RSScreen *screen, int posX, int posY, int width, int height, Color color) {
-  RSCommand cmd;
-  if (RSCommandInit(&cmd, 5, FC_DRAW_RECTANGLE)) {
-    return;
-  }
-
-  cmd.argv[0] = argFromInt(posX);
-  cmd.argv[1] = argFromInt(posY);
-  cmd.argv[2] = argFromInt(width);
-  cmd.argv[3] = argFromInt(height);
-  cmd.argv[4] = argFromColor(color);
-
   // Line up args in an array
   void *argv[5] = {
     &posX,
@@ -292,12 +258,7 @@ void RSScreenDrawRectangle(RSScreen *screen, int posX, int posY, int width, int 
     AT_COLOR,
   };
 
-  errno_t err = RSCommandPopulate(&cmd, 5, argv, argt);
-  if (err) {
-    return;
-  }
-
-  RSScreenQueuePush(screen, cmd);
+  RSDeployCommand(screen, FC_DRAW_RECTANGLE, 5, arv, argt);
 }
 
 void RSScreenDrawRectangleV(RSScreen *screen, Vector2 position, Vector2 size, Color color);
