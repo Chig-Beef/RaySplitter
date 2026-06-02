@@ -7,6 +7,15 @@
 #include "RSCommand.h"
 #include "RSScreen.h"
 
+typedef enum {
+  AT_INT,
+  AT_COLOR,
+  AT_FLOAT,
+  AT_STRING,
+  AT_VECTOR2,
+  AT_RECTANGLE,
+} RSArgType;
+
 char *argFromInt(int i) {
   int nDigits = 1;
   int n = i;
@@ -65,6 +74,43 @@ char *argFromRectangle(Rectangle rect) {
   return buffer;
 }
 
+char *stringifyRawArg(void *v, RSArgType t) {
+  switch (t) {
+    case AT_INT:
+      return argFromInt(*(int*)v);
+    case AT_COLOR:
+      return argFromColor(*(Color*)v);
+    case AT_FLOAT:
+      return argFromFloat(*(float*)v);
+    case AT_STRING:
+      return argFromStr(*(char**)v);
+    case AT_VECTOR2:
+      return argFromVector2(*(Vector2*)v);
+    case AT_RECTANGLE:
+      return argFromRectangle(*(Rectangle*)v);
+
+    default: // Bad type
+      return NULL;
+  }
+}
+
+errno_t RSCommandPopulate(RSCommand *cmd, int argc, void **argv, RSArgType *argt) {
+  // Over each arg
+  for (int i = 0; i < argc; ++i) {
+    // Using the type, convert the value to a string
+    cmd->argv[i] = stringifyRawArg(argv[i], argt[i]);
+
+    // If we failed
+    if (cmd->argv[i] == NULL) {
+      printf("Invalid arg!\n");
+      // TODO: Cleanup
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
 // R_CORE
 void RSScreenSetWindowTitle(RSScreen *screen, const char *title);
 void RSScreenSetWindowPosition(RSScreen *screen, int x, int y);
@@ -90,10 +136,26 @@ void RSScreenDrawCircle(RSScreen *screen, int centerX, int centerY, float radius
     return;
   }
 
-  cmd.argv[0] = argFromInt(centerX);
-  cmd.argv[1] = argFromInt(centerY);
-  cmd.argv[2] = argFromFloat(radius);
-  cmd.argv[3] = argFromColor(color);
+  // Line up args in an array
+  void *argv[4] = {
+    &centerX,
+    &centerY,
+    &radius,
+    &color,
+  };
+
+  // Specify the types of each arg
+  RSArgType argt[4] = {
+    AT_INT,
+    AT_INT,
+    AT_FLOAT,
+    AT_COLOR,
+  };
+
+  errno_t err = RSCommandPopulate(&cmd, 4, argv, argt);
+  if (err) {
+    return;
+  }
 
   RSScreenQueuePush(screen, cmd);
 }
@@ -104,9 +166,24 @@ void RSScreenDrawCircleV(RSScreen *screen, Vector2 center, float radius, Color c
     return;
   }
 
-  cmd.argv[0] = argFromVector2(center);
-  cmd.argv[1] = argFromFloat(radius);
-  cmd.argv[2] = argFromColor(color);
+  // Line up args in an array
+  void *argv[3] = {
+    &center,
+    &radius,
+    &color,
+  };
+
+  // Specify the types of each arg
+  RSArgType argt[3] = {
+    AT_VECTOR2,
+    AT_FLOAT,
+    AT_COLOR,
+  };
+
+  errno_t err = RSCommandPopulate(&cmd, 3, argv, argt);
+  if (err) {
+    return;
+  }
 
   RSScreenQueuePush(screen, cmd);
 }
@@ -117,9 +194,24 @@ void RSScreenDrawCircleGradient(RSScreen *screen, Vector2 center, float radius, 
     return;
   }
 
-  cmd.argv[0] = argFromVector2(center);
-  cmd.argv[1] = argFromFloat(radius);
-  cmd.argv[2] = argFromColor(color);
+  // Line up args in an array
+  void *argv[3] = {
+    &center,
+    &radius,
+    &color,
+  };
+
+  // Specify the types of each arg
+  RSArgType argt[3] = {
+    AT_VECTOR2,
+    AT_FLOAT,
+    AT_COLOR,
+  };
+
+  errno_t err = RSCommandPopulate(&cmd, 3, argv, argt);
+  if (err) {
+    return;
+  }
 
   RSScreenQueuePush(screen, cmd);
 }
@@ -130,12 +222,30 @@ void RSScreenDrawCircleSector(RSScreen *screen, Vector2 center, float radius, fl
     return;
   }
 
-  cmd.argv[0] = argFromVector2(center);
-  cmd.argv[1] = argFromFloat(radius);
-  cmd.argv[2] = argFromFloat(startAngle);
-  cmd.argv[3] = argFromFloat(endAngle);
-  cmd.argv[4] = argFromInt(segments);
-  cmd.argv[5] = argFromColor(color);
+  // Line up args in an array
+  void *argv[6] = {
+    &center,
+    &radius,
+    &startAngle,
+    &endAngle,
+    &segments,
+    &color,
+  };
+
+  // Specify the types of each arg
+  RSArgType argt[6] = {
+    AT_VECTOR2,
+    AT_FLOAT,
+    AT_FLOAT,
+    AT_FLOAT,
+    AT_INT,
+    AT_COLOR,
+  };
+
+  errno_t err = RSCommandPopulate(&cmd, 6, argv, argt);
+  if (err) {
+    return;
+  }
 
   RSScreenQueuePush(screen, cmd);
 }
@@ -163,6 +273,29 @@ void RSScreenDrawRectangle(RSScreen *screen, int posX, int posY, int width, int 
   cmd.argv[2] = argFromInt(width);
   cmd.argv[3] = argFromInt(height);
   cmd.argv[4] = argFromColor(color);
+
+  // Line up args in an array
+  void *argv[5] = {
+    &posX,
+    &posY,
+    &width,
+    &height,
+    &color,
+  };
+
+  // Specify the types of each arg
+  RSArgType argt[5] = {
+    AT_INT,
+    AT_INT,
+    AT_INT,
+    AT_INT,
+    AT_COLOR,
+  };
+
+  errno_t err = RSCommandPopulate(&cmd, 5, argv, argt);
+  if (err) {
+    return;
+  }
 
   RSScreenQueuePush(screen, cmd);
 }
