@@ -1,6 +1,8 @@
 #ifndef _RS_COMMAND_H_
 #define _RS_COMMAND_H_
 
+#include <corecrt.h>
+
 // TODO: Add funcs that return values
 // TODO: Add funcs that ref images/textures/fonts
 // TODO: Add funcs that have array parms
@@ -85,5 +87,7 @@ typedef struct {
 void RSCommandFree(RSCommand *cmd);
 
 char *RSCommandPackage(RSCommand *cmd);
+
+errno_t RSCommandInit(RSCommand *cmd, int argc, FuncCode func);
 
 #endif

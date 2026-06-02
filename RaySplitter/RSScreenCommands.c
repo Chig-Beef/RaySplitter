@@ -1,5 +1,5 @@
-#include <corecrt_memory.h>
-#include <cstring>
+#include <memory.h>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -84,30 +84,43 @@ void RSScreenDrawLineEx(RSScreen *screen, Vector2 startPos, Vector2 endPos, floa
 void RSScreenDrawLineBezier(RSScreen *screen, Vector2 startPos, Vector2 endPos, float thick, Color color);
 void RSScreenDrawLineDashed(RSScreen *screen, Vector2 startPos, Vector2 endPos, int dashSize, int spaceSize, Color color);
 
-void RSScreenDrawCircle(RSScreen *screen, int centerX, int centerY, float radius, Color color);
+void RSScreenDrawCircle(RSScreen *screen, int centerX, int centerY, float radius, Color color) {
   if (RSScreenQueueFull(screen)) {
     printf("Too many commands attempted in a single frame\n");
     return;
   }
 
   RSCommand cmd;
-  cmd.func = FC_DRAW_CIRCLE;
-  cmd.argc = 4;
-  cmd.argv = malloc(4*sizeof(char*));
-  if (!cmd.argv) {
-    printf("Couldn't allocate argv buffer for cmd\n");
+  if (RSCommandInit(&cmd, 4, FC_DRAW_CIRCLE)) {
     return;
   }
 
   cmd.argv[0] = argFromInt(centerX);
   cmd.argv[1] = argFromInt(centerY);
-  cmd.argv[2] = argFromInt((int)radius);
+  cmd.argv[2] = argFromFloat(radius);
   cmd.argv[3] = argFromColor(color);
 
   screen->commandQueue[screen->commandQueueLen++] = cmd;
 }
 
-void RSScreenDrawCircleV(RSScreen *screen, Vector2 center, float radius, Color color);
+void RSScreenDrawCircleV(RSScreen *screen, Vector2 center, float radius, Color color) {
+  if (RSScreenQueueFull(screen)) {
+    printf("Too many commands attempted in a single frame\n");
+    return;
+  }
+
+  RSCommand cmd;
+  if (RSCommandInit(&cmd, 3, FC_DRAW_CIRCLE_V)) {
+    return;
+  }
+
+  cmd.argv[0] = argFromVector2(center);
+  cmd.argv[1] = argFromFloat(radius);
+  cmd.argv[2] = argFromColor(color);
+
+  screen->commandQueue[screen->commandQueueLen++] = cmd;
+}
+
 void RSScreenDrawCircleGradient(RSScreen *screen, Vector2 center, float radius, Color color);
 void RSScreenDrawCircleSector(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color);
 void RSScreenDrawCircleSectorLines(RSScreen *screen, Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color);
@@ -129,11 +142,7 @@ void RSScreenDrawRectangle(RSScreen *screen, int posX, int posY, int width, int 
   }
 
   RSCommand cmd;
-  cmd.func = FC_DRAW_RECTANGLE;
-  cmd.argc = 5;
-  cmd.argv = malloc(5*sizeof(char*));
-  if (!cmd.argv) {
-    printf("Couldn't allocate argv buffer for cmd\n");
+  if (RSCommandInit(&cmd, 5, FC_DRAW_RECTANGLE)) {
     return;
   }
 

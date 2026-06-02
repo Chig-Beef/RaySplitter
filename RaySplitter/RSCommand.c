@@ -1,3 +1,4 @@
+#include <corecrt.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -50,4 +51,15 @@ char *RSCommandPackage(RSCommand *cmd) {
   out[totalSize] = '\n';
   out[totalSize+1] = 0;
   return out;
+}
+
+errno_t RSCommandInit(RSCommand *cmd, int argc, FuncCode func) {
+  cmd->func = func;
+  cmd->argc = argc;
+  cmd->argv = malloc(argc*sizeof(char*));
+  if (!cmd->argv) {
+    printf("Couldn't allocate argv buffer for cmd\n");
+    return 1;
+  }
+  return 0;
 }
