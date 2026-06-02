@@ -31,7 +31,7 @@ char *argFromColor(Color c) {
   return buffer;
 }
 
-void RSScreenDrawRectangle(RSScreen *screen, int x, int y, int width, int height, Color clr) {
+void RSScreenDrawRectangle(RSScreen *screen, int posX, int posY, int width, int height, Color color) {
   if (screen->commandQueueLen == RSSCREEN_QUEUE_MAX_LEN) {
     printf("Too many commands attempted in a single frame\n");
     return;
@@ -46,17 +46,17 @@ void RSScreenDrawRectangle(RSScreen *screen, int x, int y, int width, int height
     return;
   }
 
-  cmd.argv[0] = argFromInt(x);
-  cmd.argv[1] = argFromInt(y);
+  cmd.argv[0] = argFromInt(posX);
+  cmd.argv[1] = argFromInt(posY);
   cmd.argv[2] = argFromInt(width);
   cmd.argv[3] = argFromInt(height);
-  cmd.argv[4] = argFromColor(clr);
+  cmd.argv[4] = argFromColor(color);
 
   screen->commandQueue[screen->commandQueueLen++] = cmd;
 }
 
 
-void RSScreenDrawCircle(RSScreen *screen, int x, int y, int radius, Color clr) {
+void RSScreenDrawCircle(RSScreen *screen, int centerX, int centerY, float radius, Color color);
   if (screen->commandQueueLen == RSSCREEN_QUEUE_MAX_LEN) {
     printf("Too many commands attempted in a single frame\n");
     return;
@@ -71,10 +71,10 @@ void RSScreenDrawCircle(RSScreen *screen, int x, int y, int radius, Color clr) {
     return;
   }
 
-  cmd.argv[0] = argFromInt(x);
-  cmd.argv[1] = argFromInt(y);
-  cmd.argv[2] = argFromInt(radius);
-  cmd.argv[3] = argFromColor(clr);
+  cmd.argv[0] = argFromInt(centerX);
+  cmd.argv[1] = argFromInt(centerY);
+  cmd.argv[2] = argFromInt((int)radius);
+  cmd.argv[3] = argFromColor(color);
 
   screen->commandQueue[screen->commandQueueLen++] = cmd;
 }
