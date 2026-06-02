@@ -14,7 +14,7 @@ void RSCommandFree(RSCommand *cmd) {
 
 char *RSCommandPackage(RSCommand *cmd) {
   // A byte for the func
-  int totalSize = 1;
+  int totalSize = 3;
 
   // Add bytes for the spaces
   totalSize += cmd->argc;
@@ -29,7 +29,11 @@ char *RSCommandPackage(RSCommand *cmd) {
   char *p = out;
   
   // Place in func
-  *p = cmd->func+'0';
+  *p = ((cmd->func>>16)&255)+'0';
+  ++p;
+  *p = ((cmd->func>>8)&255)+'0';
+  ++p;
+  *p = ((cmd->func)&255)+'0';
   ++p;
 
   // Place in args
