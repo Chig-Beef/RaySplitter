@@ -146,3 +146,15 @@ errno_t RSScreenFrame(RSScreen *screen) {
 bool RSScreenQueueFull(RSScreen *screen) {
   return screen->commandQueueLen == RSSCREEN_QUEUE_MAX_LEN;
 }
+
+void RSScreenQueuePush(RSScreen *screen, RSCommand cmd) {
+  if (RSScreenQueueFull(screen)) {
+    printf("Command queue full!\n");
+
+    // Still have to free the command
+    RSCommandFree(&cmd);
+    return;
+  }
+
+  screen->commandQueue[screen->commandQueueLen++] = cmd;
+}

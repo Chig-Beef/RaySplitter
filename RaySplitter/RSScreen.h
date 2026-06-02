@@ -34,4 +34,6 @@ errno_t RSScreenFrame(RSScreen *screen);
 
 bool RSScreenQueueFull(RSScreen *screen);
 
+void RSScreenQueuePush(RSScreen *screen, RSCommand cmd);
+
 #endif

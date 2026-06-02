@@ -85,11 +85,6 @@ void RSScreenDrawLineBezier(RSScreen *screen, Vector2 startPos, Vector2 endPos, 
 void RSScreenDrawLineDashed(RSScreen *screen, Vector2 startPos, Vector2 endPos, int dashSize, int spaceSize, Color color);
 
 void RSScreenDrawCircle(RSScreen *screen, int centerX, int centerY, float radius, Color color) {
-  if (RSScreenQueueFull(screen)) {
-    printf("Too many commands attempted in a single frame\n");
-    return;
-  }
-
   RSCommand cmd;
   if (RSCommandInit(&cmd, 4, FC_DRAW_CIRCLE)) {
     return;
@@ -100,15 +95,10 @@ void RSScreenDrawCircle(RSScreen *screen, int centerX, int centerY, float radius
   cmd.argv[2] = argFromFloat(radius);
   cmd.argv[3] = argFromColor(color);
 
-  screen->commandQueue[screen->commandQueueLen++] = cmd;
+  RSScreenQueuePush(screen, cmd);
 }
 
 void RSScreenDrawCircleV(RSScreen *screen, Vector2 center, float radius, Color color) {
-  if (RSScreenQueueFull(screen)) {
-    printf("Too many commands attempted in a single frame\n");
-    return;
-  }
-
   RSCommand cmd;
   if (RSCommandInit(&cmd, 3, FC_DRAW_CIRCLE_V)) {
     return;
@@ -118,7 +108,7 @@ void RSScreenDrawCircleV(RSScreen *screen, Vector2 center, float radius, Color c
   cmd.argv[1] = argFromFloat(radius);
   cmd.argv[2] = argFromColor(color);
 
-  screen->commandQueue[screen->commandQueueLen++] = cmd;
+  RSScreenQueuePush(screen, cmd);
 }
 
 void RSScreenDrawCircleGradient(RSScreen *screen, Vector2 center, float radius, Color color);
@@ -136,11 +126,6 @@ void RSScreenDrawRing(RSScreen *screen, Vector2 center, float innerRadius, float
 void RSScreenDrawRingLines(RSScreen *screen, Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color);
 
 void RSScreenDrawRectangle(RSScreen *screen, int posX, int posY, int width, int height, Color color) {
-  if (RSScreenQueueFull(screen)) {
-    printf("Too many commands attempted in a single frame\n");
-    return;
-  }
-
   RSCommand cmd;
   if (RSCommandInit(&cmd, 5, FC_DRAW_RECTANGLE)) {
     return;
@@ -152,7 +137,7 @@ void RSScreenDrawRectangle(RSScreen *screen, int posX, int posY, int width, int 
   cmd.argv[3] = argFromInt(height);
   cmd.argv[4] = argFromColor(color);
 
-  screen->commandQueue[screen->commandQueueLen++] = cmd;
+  RSScreenQueuePush(screen, cmd);
 }
 
 void RSScreenDrawRectangleV(RSScreen *screen, Vector2 position, Vector2 size, Color color);
