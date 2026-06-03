@@ -42,13 +42,24 @@ bool checkCmdAvailable() {
   return false;
 }
 
+int getCodeFromArg(char *arg) {
+  const char a = arg[0]-'0';
+  const char b = arg[1]-'0';
+  const char c = arg[2]-'0';
+  const int x = ((int)a)*100;
+  const int y = ((int)b)*10;
+  const int z = ((int)c);
+  return x + y + z;
+}
+
 void executeCmd(char *cmd) {
   // Split command into its args
   int argc;
   char **argv = splitString(cmd, ' ', &argc);
 
   // Determine what to do
-  int code = argv[0][0]-'0';
+  int code = getCodeFromArg(argv[0]);
+
   FuncStruct fn = getFuncFromCode(code);
   if (!fn.func) {
     printf("Invalid function\n");

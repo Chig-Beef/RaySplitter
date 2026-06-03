@@ -125,31 +125,37 @@ void *parseArg(char *arg, RSArgType t) {
       int i = argToInt(arg);
       stackPtr = &i;
       size = sizeof(int);
+      break;
 
     case AT_COLOR:
       Color c = argToColor(arg);
       stackPtr = &c;
       size = sizeof(Color);
+      break;
 
     case AT_FLOAT:
       float f = argToFloat(arg);
       stackPtr = &f;
       size = sizeof(float);
+      break;
 
     case AT_STRING:
       char *s = argToString(arg);
       stackPtr = &s;
       size = sizeof(char *);
+      break;
 
     case AT_VECTOR2:
       Vector2 v = argToVector2(arg);
       stackPtr = &v;
       size = sizeof(Vector2);
+      break;
 
     case AT_RECTANGLE:
       Rectangle r = argToRectangle(arg);
       stackPtr = &r;
       size = sizeof(Rectangle);
+      break;
 
     default:
       printf("Bad arg type\n");
@@ -243,7 +249,7 @@ void drawLineDashedWrapper(void **argv) {
 void drawCircleWrapper(void **argv) {
   int x = *(int*)argv[0];
   int y = *(int*)argv[1];
-  int r = *(int*)argv[2];
+  float r = *(float*)argv[2];
   Color clr = *(Color*)argv[3];
   DrawCircle(x, y, r, clr);
 }
@@ -634,11 +640,17 @@ void ExecuteFunc(FuncStruct f, int argc, char **argv) {
   // Parse each arg
   for (int i = 0; i < argc; ++i) {
     v[i] = parseArg(argv[i], f.argt[i]);
+    if (v[i] == NULL) {
+      return;
+    }
   }
 
   // Execute the function
   f.func(v);
 
   // Free arg array
+  for (int i = 0; i < argc; ++i) {
+    free(v[i]);
+  }
   free(v);
 }
