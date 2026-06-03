@@ -6,6 +6,7 @@
 #define ShowCursor winShowCursor
 #define LoadImageA winLoadImageA
 #define DrawTextA winDrawTextA
+#define DrawText winDrawText
 #define DrawTextExA winDrawTextExA
 #define PlaySoundA winPlaySoundA
 
@@ -16,6 +17,7 @@
 #undef ShowCursor
 #undef LoadImageA
 #undef DrawTextA
+#undef DrawText
 #undef DrawTextExA
 #undef PlaySoundA
 

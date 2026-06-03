@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "Commands.h"
+#include "../RaySplitter/winray.h"
 
 int argToInt(char *arg) {
   return atoi(arg);
@@ -162,53 +163,81 @@ void *parseArg(char *arg, RSArgType t) {
 
 // R_CORE
 void setWindowTitleWrapper(void **argv) {
-
+  char *title = *(char**)argv[0];
+  SetWindowTitle(title);
 }
 
 void setWindowPositionWrapper(void **argv) {
-
+  int x = *(int*)argv[0];
+  int y = *(int*)argv[1];
+  SetWindowPosition(x, y);
 }
 
 void setWindowSizeWrapper(void **argv) {
-
+  int width = *(int*)argv[0];
+  int height = *(int*)argv[1];
+  SetWindowSize(width, height);
 }
 
 void clearBackgroundWrapper(void **argv) {
-
+  Color color = *(Color*)argv[0];
+  ClearBackground(color);
 }
 
 void takeScreenshotWrapper(void **argv) {
-
+  char* fileName = *(char**)argv[0];
+  TakeScreenshot(fileName);
 }
 
 
 // R_SHAPES
 void drawPixelWrapper(void **argv) {
-
+  int posX = *(int*)argv[0];
+  int posY = *(int*)argv[1];
+  Color color = *(Color*)argv[2];
+  DrawPixel(posX, posY, color);
 }
 
 void drawPixelVWrapper(void **argv) {
-
+  Vector2 position = *(Vector2*)argv[0];
+  Color color = *(Color*)argv[1];
+  DrawPixelV(position, color);
 }
 
 void drawLineWrapper(void **argv) {
-
+  int startPosX = *(int*)argv[0];
+  int startPosY = *(int*)argv[1];
+  int endPosX = *(int*)argv[2];
+  int endPosY = *(int*)argv[3];
+  Color color = *(Color*)argv[4];
+  DrawLine(startPosX, startPosY, endPosX, endPosY, color);
 }
 
 void drawLineVWrapper(void **argv) {
-
+  Vector2 startPos = *(Vector2*)argv[0];
+  Vector2 endPos = *(Vector2*)argv[1];
+  Color color = *(Color*)argv[2];
+  DrawLineV(startPos, endPos, color);
 }
 
 void drawLineExWrapper(void **argv) {
-
+  Vector2 startPos = *(Vector2*)argv[0];
+  Vector2 endPos = *(Vector2*)argv[1];
+  float thick = *(float*)argv[2];
+  Color color = *(Color*)argv[3];
+  DrawLineEx(startPos, endPos, thick, color);
 }
 
 void drawLineBezierWrapper(void **argv) {
-
+  Vector2 startPos = *(Vector2*)argv[0];
+  Vector2 endPos = *(Vector2*)argv[1];
+  float thick = *(float*)argv[2];
+  Color color = *(Color*)argv[3];
+  DrawLineBezier(startPos, endPos, thick, color);
 }
 
 void drawLineDashedWrapper(void **argv) {
-
+  // ???
 }
 
 void drawCircleWrapper(void **argv) {
@@ -216,56 +245,104 @@ void drawCircleWrapper(void **argv) {
   int y = *(int*)argv[1];
   int r = *(int*)argv[2];
   Color clr = *(Color*)argv[3];
-
   DrawCircle(x, y, r, clr);
 }
 
 void drawCircleVWrapper(void **argv) {
-
+  Vector2 center = *(Vector2*)argv[0];
+  float radius = *(float*)argv[1];
+  Color color = *(Color*)argv[2];
+  DrawCircleV(center, radius, color);
 }
 
 void drawCircleGradientWrapper(void **argv) {
-
+  int centerX = *(int*)argv[0];
+  int centerY = *(int*)argv[1];
+  float radius = *(float*)argv[2];
+  Color color1 = *(Color*)argv[3];
+  Color color2 = *(Color*)argv[4];
+  DrawCircleGradient(centerX, centerY, radius, color1, color2);
 }
 
 void drawCircleSectorWrapper(void **argv) {
-
+  Vector2 center = *(Vector2*)argv[0];
+  float radius = *(float*)argv[1];
+  float startAngle = *(float*)argv[2];
+  float endAngle = *(float*)argv[3];
+  int segments = *(int*)argv[4];
+  Color color = *(Color*)argv[5];
+  DrawCircleSector(center, radius, startAngle, endAngle, segments, color);
 }
 
 void drawCircleSectorLinesWrapper(void **argv) {
-
+  Vector2 center = *(Vector2*)argv[0];
+  float radius = *(float*)argv[1];
+  float startAngle = *(float*)argv[2];
+  float endAngle = *(float*)argv[3];
+  int segments = *(int*)argv[4];
+  Color color = *(Color*)argv[5];
+  DrawCircleSectorLines(center, radius, startAngle, endAngle, segments, color);
 }
 
 void drawCircleLinesWrapper(void **argv) {
-
+  int centerX = *(int*)argv[0];
+  int centerY = *(int*)argv[1];
+  float radius = *(float*)argv[2];
+  Color color = *(Color*)argv[3];
+  DrawCircleLines(centerX, centerY, radius, color);
 }
 
 void drawCircleLinesVWrapper(void **argv) {
-
+  Vector2 center = *(Vector2*)argv[0];
+  float radius = *(float*)argv[1];
+  Color color = *(Color*)argv[2];
+  DrawCircleLinesV(center, radius, color);
 }
 
 void drawEllipseWrapper(void **argv) {
-
+  int centerX = *(int*)argv[0];
+  int centerY = *(int*)argv[1];
+  float radiusH = *(float*)argv[2];
+  float radiusV = *(float*)argv[3];
+  Color color = *(Color*)argv[4];
+  DrawEllipse(centerX, centerY, radiusH, radiusV, color);
 }
 
 void drawEllipseVWrapper(void **argv) {
-
+  // ??
 }
 
 void drawEllipseLinesWrapper(void **argv) {
-
+  int centerX = *(int*)argv[0];
+  int centerY = *(int*)argv[1];
+  float radiusH = *(float*)argv[2];
+  float radiusV = *(float*)argv[3];
+  Color color = *(Color*)argv[4];
+  DrawEllipse(centerX, centerY, radiusH, radiusV, color);
 }
 
 void drawEllipseLinesVWrapper(void **argv) {
-
+  int centerX = *(int*)argv[0];
+  int centerY = *(int*)argv[1];
+  float radiusH = *(float*)argv[2];
+  float radiusV = *(float*)argv[3];
+  Color color = *(Color*)argv[4];
+  DrawEllipseLines(centerX, centerY, radiusH, radiusV, color);
 }
 
 void drawRingWrapper(void **argv) {
-
+  Vector2 center = *(Vector2*)argv[0];
+  float innerRadius = *(float*)argv[1];
+  float outerRadius = *(float*)argv[2];
+  float startAngle = *(float*)argv[3];
+  float endAngle = *(float*)argv[4];
+  int segments = *(int*)argv[5];
+  Color color = *(Color*)argv[6];
+  DrawRing(center, innerRadius, outerRadius, startAngle, endAngle, segments, color);
 }
 
 void drawRingLinesWrapper(void **argv) {
-
+  // ??
 }
 
 void drawRectangleWrapper(void **argv) {
@@ -279,87 +356,181 @@ void drawRectangleWrapper(void **argv) {
 }
 
 void drawRectangleVWrapper(void **argv) {
-
+  Vector2 position = *(Vector2*)argv[0];
+  Vector2 size = *(Vector2*)argv[1];
+  Color color = *(Color*)argv[2];
+  DrawRectangleV(position, size, color);
 }
 
 void drawRectangleRecWrapper(void **argv) {
-
+  Rectangle rec = *(Rectangle*)argv[0];
+  Color color = *(Color*)argv[1];
+  DrawRectangleRec(rec, color);
 }
 
 void drawRectangleProWrapper(void **argv) {
-
+  Rectangle rec = *(Rectangle*)argv[0];
+  Vector2 origin = *(Vector2*)argv[1];
+  float rotation = *(float*)argv[2];
+  Color color = *(Color*)argv[3];
+  DrawRectanglePro(rec, origin, rotation, color);
 }
 
 void drawRectangleGradientVWrapper(void **argv) {
-
+  int posX = *(int*)argv[0];
+  int posY = *(int*)argv[1];
+  int width = *(int*)argv[2];
+  int height = *(int*)argv[3];
+  Color color1 = *(Color*)argv[4];
+  Color color2 = *(Color*)argv[5];
+  DrawRectangleGradientV(posX, posY, width, height, color1, color2);
 }
 
 void drawRectangleGradientHWrapper(void **argv) {
-
+  int posX = *(int*)argv[0];
+  int posY = *(int*)argv[1];
+  int width = *(int*)argv[2];
+  int height = *(int*)argv[3];
+  Color color1 = *(Color*)argv[4];
+  Color color2 = *(Color*)argv[5];
+  DrawRectangleGradientH(posX, posY, width, height, color1, color2);
 }
 
 void drawRectangleGradientExWrapper(void **argv) {
-
+  Rectangle rec = *(Rectangle*)argv[0];
+  Color col1 = *(Color*)argv[1];
+  Color col2 = *(Color*)argv[2];
+  Color col3 = *(Color*)argv[3];
+  Color col4 = *(Color*)argv[4];
+  DrawRectangleGradientEx(rec, col1, col2, col3, col4);
 }
 
 void drawRectangleLinesWrapper(void **argv) {
-
+  int posX = *(int*)argv[0];
+  int posY = *(int*)argv[1];
+  int width = *(int*)argv[2];
+  int height = *(int*)argv[3];
+  Color color = *(Color*)argv[4];
+  DrawRectangleLines(posX, posY, width, height, color);
 }
 
 void drawRectangleLinesExWrapper(void **argv) {
-
+  Rectangle rec = *(Rectangle*)argv[0];
+  float lineThick = *(float*)argv[1];
+  Color color = *(Color*)argv[2];
+  DrawRectangleLinesEx(rec, lineThick, color);
 }
 
 void drawRectangleRoundedWrapper(void **argv) {
-
+  Rectangle rec = *(Rectangle*)argv[0];
+  float roundness = *(float*)argv[1];
+  int segments = *(int*)argv[2];
+  Color color = *(Color*)argv[3];
+  DrawRectangleRounded(rec, roundness, segments, color);
 }
 
 void drawRectangleRoundedLinesWrapper(void **argv) {
-
+  Rectangle rec = *(Rectangle*)argv[0];
+  float roundness = *(float*)argv[1];
+  int segments = *(int*)argv[2];
+  float lineThick = *(float*)argv[3];
+  Color color = *(Color*)argv[4];
+  DrawRectangleRoundedLines(rec, roundness, segments, lineThick, color);
 }
 
 void drawRectangleRoundedLinesExWrapper(void **argv) {
-
+  // ??
 }
 
 void drawTriangleWrapper(void **argv) {
-
+  Vector2 v1 = *(Vector2*)argv[0];
+  Vector2 v2 = *(Vector2*)argv[1];
+  Vector2 v3 = *(Vector2*)argv[2];
+  Color color = *(Color*)argv[3];
+  DrawTriangle(v1, v2, v3, color);
 }
 
 void drawTriangleLinesWrapper(void **argv) {
-
+  Vector2 v1 = *(Vector2*)argv[0];
+  Vector2 v2 = *(Vector2*)argv[1];
+  Vector2 v3 = *(Vector2*)argv[2];
+  Color color = *(Color*)argv[3];
+  DrawTriangleLines(v1, v2, v3, color);
 }
 
 void drawPolyWrapper(void **argv) {
-
+  Vector2 center = *(Vector2*)argv[0];
+  int sides = *(int*)argv[1];
+  float radius = *(float*)argv[2];
+  float rotation = *(float*)argv[3];
+  Color color = *(Color*)argv[4];
+  DrawPoly(center, sides, radius, rotation, color);
 }
 
 void drawPolyLinesWrapper(void **argv) {
-
+  Vector2 center = *(Vector2*)argv[0];
+  int sides = *(int*)argv[1];
+  float radius = *(float*)argv[2];
+  float rotation = *(float*)argv[3];
+  Color color = *(Color*)argv[4];
+  DrawPolyLines(center, sides, radius, rotation, color);
 }
 
 void drawPolyLinesExWrapper(void **argv) {
-
+  Vector2 center = *(Vector2*)argv[0];
+  int sides = *(int*)argv[1];
+  float radius = *(float*)argv[2];
+  float rotation = *(float*)argv[3];
+  float lineThick = *(float*)argv[4];
+  Color color = *(Color*)argv[5];
+  DrawPolyLinesEx(center, sides, radius, rotation, lineThick, color);
 }
 
 void drawSplineSegmentLinearWrapper(void **argv) {
-
+  Vector2 p1 = *(Vector2*)argv[0];
+  Vector2 p2 = *(Vector2*)argv[1];
+  float thick = *(float*)argv[2];
+  Color color = *(Color*)argv[3];
+  DrawSplineSegmentLinear(p1, p2, thick, color);
 }
 
 void drawSplineSegmentBasisWrapper(void **argv) {
-
+  Vector2 p1 = *(Vector2*)argv[0];
+  Vector2 p2 = *(Vector2*)argv[1];
+  Vector2 p3 = *(Vector2*)argv[2];
+  Vector2 p4 = *(Vector2*)argv[3];
+  float thick = *(float*)argv[4];
+  Color color = *(Color*)argv[5];
+  DrawSplineSegmentBasis(p1, p2, p3, p4, thick, color);
 }
 
 void drawSplineSegmentCatmullRomWrapper(void **argv) {
-
+  Vector2 p1 = *(Vector2*)argv[0];
+  Vector2 p2 = *(Vector2*)argv[1];
+  Vector2 p3 = *(Vector2*)argv[2];
+  Vector2 p4 = *(Vector2*)argv[3];
+  float thick = *(float*)argv[4];
+  Color color = *(Color*)argv[5];
+  DrawSplineSegmentCatmullRom(p1, p2, p3, p4, thick, color);
 }
 
 void drawSplineSegmentBezierQuadraticWrapper(void **argv) {
-
+  Vector2 p1 = *(Vector2*)argv[0];
+  Vector2 c2 = *(Vector2*)argv[1];
+  Vector2 p3 = *(Vector2*)argv[2];
+  float thick = *(float*)argv[3];
+  Color color = *(Color*)argv[4];
+  DrawSplineSegmentBezierQuadratic(p1, c2, p3, thick, color);
 }
 
 void drawSplineSegmentBezierCubicWrapper(void **argv) {
-
+  Vector2 p1 = *(Vector2*)argv[0];
+  Vector2 c2 = *(Vector2*)argv[1];
+  Vector2 c3 = *(Vector2*)argv[2];
+  Vector2 p4 = *(Vector2*)argv[3];
+  float thick = *(float*)argv[4];
+  Color color = *(Color*)argv[5];
+  DrawSplineSegmentBezierCubic(p1, c2, c3, p4, thick, color);
 }
 
 
@@ -367,15 +538,23 @@ void drawSplineSegmentBezierCubicWrapper(void **argv) {
 
 // R_TEXT
 void drawFpsWrapper(void **argv) {
-
+  int posX = *(int*)argv[0];
+  int posY = *(int*)argv[1];
+  DrawFPS(posX, posY);
 }
 
 void drawTextWrapper(void **argv) {
-
+  char *text = *(char**)argv[0];
+  int posX = *(int*)argv[1];
+  int posY = *(int*)argv[2];
+  int fontSize = *(int*)argv[3];
+  Color color = *(Color*)argv[4];
+  DrawText(text, posX, posY, fontSize, color);
 }
 
 void setTextLineSpacingWrapper(void **argv) {
-
+  int spacing = *(int*)argv[0];
+  SetTextLineSpacing(spacing);
 }
 
 
