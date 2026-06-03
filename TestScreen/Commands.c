@@ -160,6 +160,57 @@ void *parseArg(char *arg, RSArgType t) {
   return out;
 }
 
+// R_CORE
+void setWindowTitleWrapper(void **argv) {
+
+}
+
+void setWindowPositionWrapper(void **argv) {
+
+}
+
+void setWindowSizeWrapper(void **argv) {
+
+}
+
+void clearBackgroundWrapper(void **argv) {
+
+}
+
+void takeScreenshotWrapper(void **argv) {
+
+}
+
+
+// R_SHAPES
+void drawPixelWrapper(void **argv) {
+
+}
+
+void drawPixelVWrapper(void **argv) {
+
+}
+
+void drawLineWrapper(void **argv) {
+
+}
+
+void drawLineVWrapper(void **argv) {
+
+}
+
+void drawLineExWrapper(void **argv) {
+
+}
+
+void drawLineBezierWrapper(void **argv) {
+
+}
+
+void drawLineDashedWrapper(void **argv) {
+
+}
+
 void drawCircleWrapper(void **argv) {
   int x = *(int*)argv[0];
   int y = *(int*)argv[1];
@@ -167,6 +218,54 @@ void drawCircleWrapper(void **argv) {
   Color clr = *(Color*)argv[3];
 
   DrawCircle(x, y, r, clr);
+}
+
+void drawCircleVWrapper(void **argv) {
+
+}
+
+void drawCircleGradientWrapper(void **argv) {
+
+}
+
+void drawCircleSectorWrapper(void **argv) {
+
+}
+
+void drawCircleSectorLinesWrapper(void **argv) {
+
+}
+
+void drawCircleLinesWrapper(void **argv) {
+
+}
+
+void drawCircleLinesVWrapper(void **argv) {
+
+}
+
+void drawEllipseWrapper(void **argv) {
+
+}
+
+void drawEllipseVWrapper(void **argv) {
+
+}
+
+void drawEllipseLinesWrapper(void **argv) {
+
+}
+
+void drawEllipseLinesVWrapper(void **argv) {
+
+}
+
+void drawRingWrapper(void **argv) {
+
+}
+
+void drawRingLinesWrapper(void **argv) {
+
 }
 
 void drawRectangleWrapper(void **argv) {
@@ -179,57 +278,162 @@ void drawRectangleWrapper(void **argv) {
   DrawRectangle(x, y, w, h, clr);
 }
 
+void drawRectangleVWrapper(void **argv) {
+
+}
+
+void drawRectangleRecWrapper(void **argv) {
+
+}
+
+void drawRectangleProWrapper(void **argv) {
+
+}
+
+void drawRectangleGradientVWrapper(void **argv) {
+
+}
+
+void drawRectangleGradientHWrapper(void **argv) {
+
+}
+
+void drawRectangleGradientExWrapper(void **argv) {
+
+}
+
+void drawRectangleLinesWrapper(void **argv) {
+
+}
+
+void drawRectangleLinesExWrapper(void **argv) {
+
+}
+
+void drawRectangleRoundedWrapper(void **argv) {
+
+}
+
+void drawRectangleRoundedLinesWrapper(void **argv) {
+
+}
+
+void drawRectangleRoundedLinesExWrapper(void **argv) {
+
+}
+
+void drawTriangleWrapper(void **argv) {
+
+}
+
+void drawTriangleLinesWrapper(void **argv) {
+
+}
+
+void drawPolyWrapper(void **argv) {
+
+}
+
+void drawPolyLinesWrapper(void **argv) {
+
+}
+
+void drawPolyLinesExWrapper(void **argv) {
+
+}
+
+void drawSplineSegmentLinearWrapper(void **argv) {
+
+}
+
+void drawSplineSegmentBasisWrapper(void **argv) {
+
+}
+
+void drawSplineSegmentCatmullRomWrapper(void **argv) {
+
+}
+
+void drawSplineSegmentBezierQuadraticWrapper(void **argv) {
+
+}
+
+void drawSplineSegmentBezierCubicWrapper(void **argv) {
+
+}
+
+
+// R_TEXTURES
+
+// R_TEXT
+void drawFpsWrapper(void **argv) {
+
+}
+
+void drawTextWrapper(void **argv) {
+
+}
+
+void setTextLineSpacingWrapper(void **argv) {
+
+}
+
+
+// R_MODELS
+  
+// R_AUDIO
+
 FuncWrapper funcs[RS_NUM_FUNCS] = {
-  NULL, // FC_SET_WINDOW_TITLE
-  NULL, // FC_SET_WINDOW_POSITION
-  NULL, // FC_SET_WINDOW_SIZE
-  NULL, // FC_CLEAR_BACKGROUND
-  NULL, // FC_TAKE_SCREENSHOT
-  NULL, // FC_DRAW_PIXEL
-  NULL, // FC_DRAW_PIXEL_V
-  NULL, // FC_DRAW_LINE
-  NULL, // FC_DRAW_LINE_V
-  NULL, // FC_DRAW_LINE_EX
-  NULL, // FC_DRAW_LINE_BEZIER
-  NULL, // FC_DRAW_LINE_DASHED
+  setWindowTitleWrapper, // FC_SET_WINDOW_TITLE
+  setWindowPositionWrapper, // FC_SET_WINDOW_POSITION
+  setWindowSizeWrapper, // FC_SET_WINDOW_SIZE
+  clearBackgroundWrapper, // FC_CLEAR_BACKGROUND
+  takeScreenshotWrapper, // FC_TAKE_SCREENSHOT
+  drawPixelWrapper, // FC_DRAW_PIXEL
+  drawPixelVWrapper, // FC_DRAW_PIXEL_V
+  drawLineWrapper, // FC_DRAW_LINE
+  drawLineVWrapper, // FC_DRAW_LINE_V
+  drawLineExWrapper, // FC_DRAW_LINE_EX
+  drawLineBezierWrapper, // FC_DRAW_LINE_BEZIER
+  drawLineDashedWrapper, // FC_DRAW_LINE_DASHED
   drawCircleWrapper, // FC_DRAW_CIRCLE
-  NULL, // FC_DRAW_CIRCLE_V
-  NULL, // FC_DRAW_CIRCLE_GRADIENT
-  NULL, // FC_DRAW_CIRCLE_SECTOR
-  NULL, // FC_DRAW_CIRCLE_SECTOR_LINES
-  NULL, // FC_DRAW_CIRCLE_LINES
-  NULL, // FC_DRAW_CIRCLE_LINES_V
-  NULL, // FC_DRAW_ELLIPSE
-  NULL, // FC_DRAW_ELLIPSE_V
-  NULL, // FC_DRAW_ELLIPSE_LINES
-  NULL, // FC_DRAW_ELLIPSE_LINES_V
-  NULL, // FC_DRAW_RING
-  NULL, // FC_DRAW_RING_LINES
+  drawCircleVWrapper, // FC_DRAW_CIRCLE_V
+  drawCircleGradientWrapper, // FC_DRAW_CIRCLE_GRADIENT
+  drawCircleSectorWrapper, // FC_DRAW_CIRCLE_SECTOR
+  drawCircleSectorLinesWrapper, // FC_DRAW_CIRCLE_SECTOR_LINES
+  drawCircleLinesWrapper, // FC_DRAW_CIRCLE_LINES
+  drawCircleLinesVWrapper, // FC_DRAW_CIRCLE_LINES_V
+  drawEllipseWrapper, // FC_DRAW_ELLIPSE
+  drawEllipseVWrapper, // FC_DRAW_ELLIPSE_V
+  drawEllipseLinesWrapper, // FC_DRAW_ELLIPSE_LINES
+  drawEllipseLinesVWrapper, // FC_DRAW_ELLIPSE_LINES_V
+  drawRingWrapper, // FC_DRAW_RING
+  drawRingLinesWrapper, // FC_DRAW_RING_LINES
   drawRectangleWrapper, // FC_DRAW_RECTANGLE
-  NULL, // FC_DRAW_RECTANGLE_V
-  NULL, // FC_DRAW_RECTANGLE_REC
-  NULL, // FC_DRAW_RECTANGLE_PRO
-  NULL, // FC_DRAW_RECTANGLE_GRADIENT_V
-  NULL, // FC_DRAW_RECTANGLE_GRADIENT_H
-  NULL, // FC_DRAW_RECTANGLE_GRADIENT_EX
-  NULL, // FC_DRAW_RECTANGLE_LINES
-  NULL, // FC_DRAW_RECTANGLE_LINES_EX
-  NULL, // FC_DRAW_RECTANGLE_ROUNDED
-  NULL, // FC_DRAW_RECTANGLE_ROUNDED_LINES
-  NULL, // FC_DRAW_RECTANGLE_ROUNDED_LINES_EX
-  NULL, // FC_DRAW_TRIANGLE
-  NULL, // FC_DRAW_TRIANGLE_LINES
-  NULL, // FC_DRAW_POLY
-  NULL, // FC_DRAW_POLY_LINES
-  NULL, // FC_DRAW_POLY_LINES_EX
-  NULL, // FC_DRAW_SPLINE_SEGMENT_LINEAR
-  NULL, // FC_DRAW_SPLINE_SEGMENT_BASIS
-  NULL, // FC_DRAW_SPLINE_SEGMENT_CATMULL_ROM
-  NULL, // FC_DRAW_SPLINE_SEGMENT_BEZIER_QUADRATIC
-  NULL, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
-  NULL, // FC_DRAW_FPS
-  NULL, // FC_DRAW_TEXT
-  NULL, // FC_SET_TEXT_LINE_SPACING
+  drawRectangleVWrapper, // FC_DRAW_RECTANGLE_V
+  drawRectangleRecWrapper, // FC_DRAW_RECTANGLE_REC
+  drawRectangleProWrapper, // FC_DRAW_RECTANGLE_PRO
+  drawRectangleGradientVWrapper, // FC_DRAW_RECTANGLE_GRADIENT_V
+  drawRectangleGradientHWrapper, // FC_DRAW_RECTANGLE_GRADIENT_H
+  drawRectangleGradientExWrapper, // FC_DRAW_RECTANGLE_GRADIENT_EX
+  drawRectangleLinesWrapper, // FC_DRAW_RECTANGLE_LINES
+  drawRectangleLinesExWrapper, // FC_DRAW_RECTANGLE_LINES_EX
+  drawRectangleRoundedWrapper, // FC_DRAW_RECTANGLE_ROUNDED
+  drawRectangleRoundedLinesWrapper, // FC_DRAW_RECTANGLE_ROUNDED_LINES
+  drawRectangleRoundedLinesExWrapper, // FC_DRAW_RECTANGLE_ROUNDED_LINES_EX
+  drawTriangleWrapper, // FC_DRAW_TRIANGLE
+  drawTriangleLinesWrapper, // FC_DRAW_TRIANGLE_LINES
+  drawPolyWrapper, // FC_DRAW_POLY
+  drawPolyLinesWrapper, // FC_DRAW_POLY_LINES
+  drawPolyLinesExWrapper, // FC_DRAW_POLY_LINES_EX
+  drawSplineSegmentLinearWrapper, // FC_DRAW_SPLINE_SEGMENT_LINEAR
+  drawSplineSegmentBasisWrapper, // FC_DRAW_SPLINE_SEGMENT_BASIS
+  drawSplineSegmentCatmullRomWrapper, // FC_DRAW_SPLINE_SEGMENT_CATMULL_ROM
+  drawSplineSegmentBezierQuadraticWrapper, // FC_DRAW_SPLINE_SEGMENT_BEZIER_QUADRATIC
+  drawSplineSegmentBezierCubicWrapper, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
+  drawFpsWrapper, // FC_DRAW_FPS
+  drawTextWrapper, // FC_DRAW_TEXT
+  setTextLineSpacingWrapper, // FC_SET_TEXT_LINE_SPACING
 };
 
 FuncStruct getFuncFromCode(int code) {
