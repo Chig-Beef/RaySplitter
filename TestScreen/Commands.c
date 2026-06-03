@@ -163,12 +163,18 @@ Rectangle argToRectangle(char *arg) {
   return r;
 }
 
-RSImageCode argToImage(char *arg) {
-  return atoi(arg);
+ImageRef argToImage(char *arg) {
+  RSImageCode code = atoi(arg);
+  if (code >= RSSCREEN_MAX_IMAGES) return (ImageRef){-1};
+  if (!takenImages[code]) return (ImageRef){-1};
+  return images[code];
 }
 
-RSTextureCode argToTexture(char *arg) {
-  return atoi(arg);
+TextureRef argToTexture(char *arg) {
+  RSTextureCode code = atoi(arg);
+  if (code >= RSSCREEN_MAX_TEXTURES) return (TextureRef){-1};
+  if (!takenTextures[code]) return (TextureRef){-1};
+  return textures[code];
 }
 
 void *parseArg(char *arg, RSArgType t) {
@@ -213,15 +219,15 @@ void *parseArg(char *arg, RSArgType t) {
       break;
 
     case AT_IMAGE:
-      RSImageCode img = argToImage(arg);
+      ImageRef img = argToImage(arg);
       stackPtr = &img;
-      size = sizeof(RSImageCode);
+      size = sizeof(ImageRef);
       break;
 
     case AT_TEXTURE:
-      RSTextureCode tex = argToTexture(arg);
+      TextureRef tex = argToTexture(arg);
       stackPtr = &tex;
-      size = sizeof(RSTextureCode);
+      size = sizeof(TextureRef);
       break;
 
     default:
@@ -617,9 +623,17 @@ void genImageColorWrapper(void **argv) {
 }
 
 void loadTextureFromImageWrapper(void **argv) {
-  RSImageCode img = *(RSImageCode*)argv[0];
-  Texture tex = LoadTextureFromImage(images[img].img);
+  ImageRef img = *(ImageRef*)argv[0];
+  Texture tex = LoadTextureFromImage(img.img);
   registerTexture(tex);
+}
+
+void drawTextureWrapper(void **argv) {
+  TextureRef texture = *(TextureRef*)argv[0];
+  int posX = *(int*)argv[1];
+  int posY = *(int*)argv[2];
+  Color tint = *(Color*)argv[3];
+  DrawTexture(texture.tex, posX, posY, tint);
 }
 
 // R_TEXT
@@ -698,6 +712,7 @@ FuncWrapper funcs[RS_NUM_FUNCS] = {
   drawSplineSegmentBezierCubicWrapper, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
   genImageColorWrapper, // FC_GEN_IMAGE_COLOR
   loadTextureFromImageWrapper, // FC_LOAD_TEXTURE_FROM_IMAGE
+  drawTextureWrapper, // FC_DRAW_TEXTURE
   drawFpsWrapper, // FC_DRAW_FPS
   drawTextWrapper, // FC_DRAW_TEXT
   setTextLineSpacingWrapper, // FC_SET_TEXT_LINE_SPACING

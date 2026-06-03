@@ -30,8 +30,8 @@ float argToFloat(char *arg);
 char *argToString(char *arg);
 Vector2 argToVector2(char *arg);
 Rectangle argToRectangle(char *arg);
-RSImageCode argToImage(char *arg);
-RSTextureCode argToTexture(char *arg);
+ImageRef argToImage(char *arg);
+TextureRef argToTexture(char *arg);
 
 FuncStruct getFuncFromCode(int code);
 

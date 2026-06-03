@@ -165,6 +165,7 @@ RSArgType funcArgTypes[RS_NUM_FUNCS][10] = {
   {AT_VECTOR2, AT_VECTOR2, AT_VECTOR2, AT_VECTOR2, AT_FLOAT, AT_COLOR}, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
   {AT_INT, AT_INT, AT_COLOR}, // FC_GEN_IMAGE_COLOR
   {AT_IMAGE}, // FC_LOAD_TEXTURE_FROM_IMAGE
+  {AT_TEXTURE, AT_INT, AT_INT, AT_COLOR}, // FC_DRAW_TEXTURE
   {AT_INT, AT_INT}, // FC_DRAW_FPS
   {AT_STRING, AT_INT, AT_INT, AT_INT, AT_COLOR}, // FC_DRAW_TEXT
   {AT_INT}, // FC_SET_TEXT_LINE_SPACING
@@ -220,6 +221,7 @@ int funcArgc[RS_NUM_FUNCS] = {
   6, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
   3, // FC_GEN_IMAGE_COLOR
   1, // FC_LOAD_TEXTURE_FROM_IMAGE
+  4, // FC_DRAW_TEXTURE
   2, // FC_DRAW_FPS
   5, // FC_DRAW_TEXT
   1, // FC_SET_TEXT_LINE_SPACING
@@ -569,6 +571,12 @@ RSTexture RSScreenLoadTextureFromImage(RSScreen *screen, RSImage image) {
   RSDeployCommand(screen, func, argv);
 
   return RSScreenNewTexture(screen, image.width, image.height);
+}
+
+void RSScreenDrawTexture(RSScreen *screen, RSTexture texture, int posX, int posY, Color tint) {
+  const FuncCode func = FC_DRAW_TEXTURE;
+  void *argv[4] = {&texture, &posX, &posY, &tint};
+  RSDeployCommand(screen, func, argv);
 }
 
 // R_TEXT

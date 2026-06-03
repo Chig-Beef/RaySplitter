@@ -33,6 +33,7 @@ int main() {
   while (running) {
     RSScreenDrawRectangle(&screenA, 60, 10, 50, 50, GREEN);
     RSScreenDrawCircle(&screenA, 100, 100, 50, BLUE);
+    RSScreenDrawTexture(&screenA, tex, 200, 0, WHITE);
 
     RSScreenDrawRectangle(&screenB, 60, 10, 50, 50, YELLOW);
     RSScreenDrawCircle(&screenB, 100, 100, 50, RED);
