@@ -2,7 +2,7 @@
 #define _RS_SCREEN_H_
 
 #include "winray.h"
-#include "RScommand.h"
+#include "RSCommand.h"
 #include "RSImage.h"
 #include "RSTexture.h"
 

@@ -27,8 +27,8 @@ No input capturing from any windows.
 60.87% coverage.
 
 ### rtextures
-3 out of 115 funcs have been implemented.
-2.61% coverage.
+72 out of 115 funcs have been implemented.
+62.61% coverage.
 
 ### rtext
 3 out of 59 funcs have been implemented.
@@ -43,5 +43,5 @@ No input capturing from any windows.
 0.00% coverage.
 
 ### total
-53 out of 597 funcs have been implemented.
-8.88% coverage.
+121 out of 597 funcs have been implemented.
+20.27% coverage.
