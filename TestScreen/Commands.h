@@ -2,6 +2,16 @@
 #define _COMMANDS_H_
 
 #include "../RaySplitter/winray.h"
+#include "../RaySplitter/RaySplitter.h"
+
+typedef void (*FuncWrapper)(void **argv);
+
+typedef struct {
+  FuncCode code;
+  FuncWrapper func;
+  int argc;
+  RSArgType *argt;
+} FuncStruct;
 
 // Converters into actual types
 int argToInt(char *arg);
@@ -11,10 +21,8 @@ char *argToString(char *arg);
 Vector2 argToVector2(char *arg);
 Rectangle argToRectangle(char *arg);
 
-void drawRectangleWrapper(int argc, char **argv);
+FuncStruct getFuncFromCode(int code);
 
-typedef void (*FuncWrapper)(int argc, char **argv);
-
-FuncWrapper getFuncFromCode(int code);
+void ExecuteFunc(FuncStruct f, int argc, char **argv);
 
 #endif

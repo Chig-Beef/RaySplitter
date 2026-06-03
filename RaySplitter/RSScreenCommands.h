@@ -4,6 +4,13 @@
 #include "winray.h"
 #include "RSScreen.h"
 
+typedef struct {
+  int argc;
+  RSArgType *argt;
+} RSFuncMetaData;
+
+RSFuncMetaData RSGetFuncMetadata(FuncCode func);
+
 // R_CORE
 void RSScreenSetWindowTitle(RSScreen *screen, const char *title);
 void RSScreenSetWindowPosition(RSScreen *screen, int x, int y);

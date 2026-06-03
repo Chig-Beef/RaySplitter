@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "Commands.h"
-#include "../RaySplitter/RaySplitter.h"
 
 int argToInt(char *arg) {
   return atoi(arg);
@@ -161,41 +160,102 @@ void *parseArg(char *arg, RSArgType t) {
   return out;
 }
 
-void drawRectangleWrapper(int argc, char **argv) {
-  if (argc != 5) {
-    printf("Bad num of args!\n");
-    return;
-  }
-
-  int x = argToInt(argv[0]);
-  int y = argToInt(argv[1]);
-  int w = argToInt(argv[2]);
-  int h = argToInt(argv[3]);
-  Color clr = argToColor(argv[4]);
-
-  DrawRectangle(x, y, w, h, clr);
-}
-
-void drawCircleWrapper(int argc, char **argv) {
-  if (argc != 4) {
-    printf("Bad num of args!\n");
-    return;
-  }
-
-  int x = argToInt(argv[0]);
-  int y = argToInt(argv[1]);
-  int r = argToInt(argv[2]);
-  Color clr = argToColor(argv[3]);
+void drawCircleWrapper(void **argv) {
+  int x = *(int*)argv[0];
+  int y = *(int*)argv[1];
+  int r = *(int*)argv[2];
+  Color clr = *(Color*)argv[3];
 
   DrawCircle(x, y, r, clr);
 }
 
+void drawRectangleWrapper(void **argv) {
+  int x = *(int*)argv[0];
+  int y = *(int*)argv[1];
+  int w = *(int*)argv[2];
+  int h = *(int*)argv[3];
+  Color clr = *(Color*)argv[4];
+
+  DrawRectangle(x, y, w, h, clr);
+}
+
 FuncWrapper funcs[RS_NUM_FUNCS] = {
-  drawRectangleWrapper,
-  drawCircleWrapper,
+  NULL, // FC_SET_WINDOW_TITLE
+  NULL, // FC_SET_WINDOW_POSITION
+  NULL, // FC_SET_WINDOW_SIZE
+  NULL, // FC_CLEAR_BACKGROUND
+  NULL, // FC_TAKE_SCREENSHOT
+  NULL, // FC_DRAW_PIXEL
+  NULL, // FC_DRAW_PIXEL_V
+  NULL, // FC_DRAW_LINE
+  NULL, // FC_DRAW_LINE_V
+  NULL, // FC_DRAW_LINE_EX
+  NULL, // FC_DRAW_LINE_BEZIER
+  NULL, // FC_DRAW_LINE_DASHED
+  drawCircleWrapper, // FC_DRAW_CIRCLE
+  NULL, // FC_DRAW_CIRCLE_V
+  NULL, // FC_DRAW_CIRCLE_GRADIENT
+  NULL, // FC_DRAW_CIRCLE_SECTOR
+  NULL, // FC_DRAW_CIRCLE_SECTOR_LINES
+  NULL, // FC_DRAW_CIRCLE_LINES
+  NULL, // FC_DRAW_CIRCLE_LINES_V
+  NULL, // FC_DRAW_ELLIPSE
+  NULL, // FC_DRAW_ELLIPSE_V
+  NULL, // FC_DRAW_ELLIPSE_LINES
+  NULL, // FC_DRAW_ELLIPSE_LINES_V
+  NULL, // FC_DRAW_RING
+  NULL, // FC_DRAW_RING_LINES
+  drawRectangleWrapper, // FC_DRAW_RECTANGLE
+  NULL, // FC_DRAW_RECTANGLE_V
+  NULL, // FC_DRAW_RECTANGLE_REC
+  NULL, // FC_DRAW_RECTANGLE_PRO
+  NULL, // FC_DRAW_RECTANGLE_GRADIENT_V
+  NULL, // FC_DRAW_RECTANGLE_GRADIENT_H
+  NULL, // FC_DRAW_RECTANGLE_GRADIENT_EX
+  NULL, // FC_DRAW_RECTANGLE_LINES
+  NULL, // FC_DRAW_RECTANGLE_LINES_EX
+  NULL, // FC_DRAW_RECTANGLE_ROUNDED
+  NULL, // FC_DRAW_RECTANGLE_ROUNDED_LINES
+  NULL, // FC_DRAW_RECTANGLE_ROUNDED_LINES_EX
+  NULL, // FC_DRAW_TRIANGLE
+  NULL, // FC_DRAW_TRIANGLE_LINES
+  NULL, // FC_DRAW_POLY
+  NULL, // FC_DRAW_POLY_LINES
+  NULL, // FC_DRAW_POLY_LINES_EX
+  NULL, // FC_DRAW_SPLINE_SEGMENT_LINEAR
+  NULL, // FC_DRAW_SPLINE_SEGMENT_BASIS
+  NULL, // FC_DRAW_SPLINE_SEGMENT_CATMULL_ROM
+  NULL, // FC_DRAW_SPLINE_SEGMENT_BEZIER_QUADRATIC
+  NULL, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
+  NULL, // FC_DRAW_FPS
+  NULL, // FC_DRAW_TEXT
+  NULL, // FC_SET_TEXT_LINE_SPACING
 };
 
-FuncWrapper getFuncFromCode(int code) {
-  if (code < 0 || code >= RS_NUM_FUNCS) return NULL;
-  return funcs[code];
+FuncStruct getFuncFromCode(int code) {
+  if (code < 0 || code >= RS_NUM_FUNCS) return (FuncStruct){0, NULL, 0, NULL};
+  RSFuncMetaData md = RSGetFuncMetadata(code);
+  return (FuncStruct){code, funcs[code], md.argc, md.argt};
+}
+
+void ExecuteFunc(FuncStruct f, int argc, char **argv) {
+  // Do we have the correct number of args?
+  if (argc != f.argc) {
+    printf("Invalid number of args\n");
+    return;
+  }
+  
+  // Create an array to hold all the args
+  void **v = malloc(argc*sizeof(void*));
+
+  // Parse each arg
+  for (int i = 0; i < argc; ++i) {
+    v[i] = parseArg(argv[i], f.argt[i]);
+  }
+
+  // Execute the function
+  f.func(v);
+
+  // Free arg array
+  free(v);
 }

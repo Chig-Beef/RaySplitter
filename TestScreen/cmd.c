@@ -49,11 +49,11 @@ void executeCmd(char *cmd) {
 
   // Determine what to do
   int code = argv[0][0]-'0';
-  FuncWrapper fn = getFuncFromCode(code);
-  if (!fn) {
+  FuncStruct fn = getFuncFromCode(code);
+  if (!fn.func) {
     printf("Invalid function\n");
   } else {
-    fn(argc-1, argv+1);
+    ExecuteFunc(fn, argc-1, argv+1);
   }
 
   // Free args

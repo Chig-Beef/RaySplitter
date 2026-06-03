@@ -8,15 +8,6 @@
 #include "RSScreen.h"
 #include "RScommand.h"
 
-typedef enum {
-  AT_INT,
-  AT_COLOR,
-  AT_FLOAT,
-  AT_STRING,
-  AT_VECTOR2,
-  AT_RECTANGLE,
-} RSArgType;
-
 char *argFromInt(int i) {
   int nDigits = 1;
   int n = i;
@@ -217,6 +208,14 @@ int funcArgc[RS_NUM_FUNCS] = {
   5, // FC_DRAW_TEXT
   1, // FC_SET_TEXT_LINE_SPACING
 };
+
+RSFuncMetaData RSGetFuncMetadata(FuncCode func) {
+  if (func >= RS_NUM_FUNCS) {
+    return (RSFuncMetaData){0, NULL};
+  }
+
+  return (RSFuncMetaData){funcArgc[func], funcArgTypes[func]};
+}
 
 void RSDeployCommand(RSScreen *screen, FuncCode func, void **argv) {
   if (func >= RS_NUM_FUNCS) {
