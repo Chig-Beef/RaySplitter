@@ -10,6 +10,8 @@ typedef enum {
   AT_STRING,
   AT_VECTOR2,
   AT_RECTANGLE,
+  AT_IMAGE,
+  AT_TEXTURE,
 } RSArgType;
 
 
@@ -71,6 +73,7 @@ typedef enum {
 
   // R_TEXTURES
   FC_GEN_IMAGE_COLOR,
+  FC_LOAD_TEXTURE_FROM_IMAGE,
 
   // R_TEXT
   FC_DRAW_FPS,
@@ -82,7 +85,7 @@ typedef enum {
   // R_AUDIO
 } FuncCode;
 
-#define RS_NUM_FUNCS 51
+#define RS_NUM_FUNCS 52
 
 // A single instruction for the target machine
 typedef struct {

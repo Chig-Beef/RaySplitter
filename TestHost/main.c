@@ -24,6 +24,7 @@ int main() {
   RSRegisterScreen(&screenB);
 
   RSImage img = RSScreenGenImageColor(&screenA, 50, 50, ORANGE);
+  RSTexture tex = RSScreenLoadTextureFromImage(&screenA, img);
 
   // Start logic loop
   printf("Starting loop\n");

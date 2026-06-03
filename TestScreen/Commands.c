@@ -6,39 +6,50 @@
 #include "Commands.h"
 #include "../RaySplitter/winray.h"
 
-typedef struct {
-  RSImageCode ref;
-  Image img;
-} ImageRef;
-
 ImageRef images[RSSCREEN_MAX_IMAGES];
+bool takenImages[RSSCREEN_MAX_IMAGES];
 int numImages = 0;
 
-void registerImage(Image img) {
-  printf("A\n");
-  bool takenCodes[RSSCREEN_MAX_IMAGES];
-  memset(takenCodes, 0, RSSCREEN_MAX_IMAGES*sizeof(bool));
-  for (int i = 0; i < numImages; ++i) {
-    takenCodes[images[i].ref] = true;
-  }
-  printf("B\n");
+TextureRef textures[RSSCREEN_MAX_TEXTURES];
+  bool takenTextures[RSSCREEN_MAX_TEXTURES];
+int numTextures = 0;
 
-  RSImageCode code;
-  for (int i = 0; i < RSSCREEN_MAX_IMAGES; ++i) {
-    if (!takenCodes[i]) {
-      code = i;
-      break;
-    }
-  }
-  printf("C\n");
+void registerImage(Image img) {
+  if (numImages == RSSCREEN_MAX_IMAGES) return;
 
   ImageRef ref;
-  ref.ref = code;
   ref.img = img;
-  printf("D\n");
 
-  images[numImages++] = ref;
-  printf("E\n");
+  for (int i = 0; i < RSSCREEN_MAX_IMAGES; ++i) {
+    if (takenImages[i]) continue;
+
+    ref.ref = i;
+    takenImages[i] = true;
+    numImages++;
+    images[i] = ref;
+    return;
+  }
+
+  // Couldn't find a spot
+}
+
+void registerTexture(Texture img) {
+  if (numTextures == RSSCREEN_MAX_TEXTURES) return;
+
+  TextureRef ref;
+  ref.tex = img;
+
+  for (int i = 0; i < RSSCREEN_MAX_TEXTURES; ++i) {
+    if (takenTextures[i]) continue;
+
+    ref.ref = i;
+    takenTextures[i] = true;
+    numTextures++;
+    textures[i] = ref;
+    return;
+  }
+
+  // Couldn't find a spot
 }
 
 int argToInt(char *arg) {
@@ -152,6 +163,14 @@ Rectangle argToRectangle(char *arg) {
   return r;
 }
 
+RSImageCode argToImage(char *arg) {
+  return atoi(arg);
+}
+
+RSTextureCode argToTexture(char *arg) {
+  return atoi(arg);
+}
+
 void *parseArg(char *arg, RSArgType t) {
   void *stackPtr;
   int size;
@@ -191,6 +210,18 @@ void *parseArg(char *arg, RSArgType t) {
       Rectangle r = argToRectangle(arg);
       stackPtr = &r;
       size = sizeof(Rectangle);
+      break;
+
+    case AT_IMAGE:
+      RSImageCode img = argToImage(arg);
+      stackPtr = &img;
+      size = sizeof(RSImageCode);
+      break;
+
+    case AT_TEXTURE:
+      RSTextureCode tex = argToTexture(arg);
+      stackPtr = &tex;
+      size = sizeof(RSTextureCode);
       break;
 
     default:
@@ -585,6 +616,12 @@ void genImageColorWrapper(void **argv) {
   registerImage(img);
 }
 
+void loadTextureFromImageWrapper(void **argv) {
+  RSImageCode img = *(RSImageCode*)argv[0];
+  Texture tex = LoadTextureFromImage(images[img].img);
+  registerTexture(tex);
+}
+
 // R_TEXT
 void drawFpsWrapper(void **argv) {
   int posX = *(int*)argv[0];
@@ -660,6 +697,7 @@ FuncWrapper funcs[RS_NUM_FUNCS] = {
   drawSplineSegmentBezierQuadraticWrapper, // FC_DRAW_SPLINE_SEGMENT_BEZIER_QUADRATIC
   drawSplineSegmentBezierCubicWrapper, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
   genImageColorWrapper, // FC_GEN_IMAGE_COLOR
+  loadTextureFromImageWrapper, // FC_LOAD_TEXTURE_FROM_IMAGE
   drawFpsWrapper, // FC_DRAW_FPS
   drawTextWrapper, // FC_DRAW_TEXT
   setTextLineSpacingWrapper, // FC_SET_TEXT_LINE_SPACING

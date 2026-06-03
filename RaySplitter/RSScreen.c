@@ -28,6 +28,11 @@ errno_t RSScreenInit(RSScreen *screen) {
 
   // No images
   screen->numImages = 0;
+  memset(screen->takenImages, 0, RSSCREEN_MAX_IMAGES*sizeof(bool));
+
+  // No textures
+  screen->numTextures = 0;
+  memset(screen->takenTextures, 0, RSSCREEN_MAX_TEXTURES*sizeof(bool));
 
   return 0;
 }
@@ -163,26 +168,43 @@ void RSScreenQueuePush(RSScreen *screen, RSCommand cmd) {
 }
 
 RSImage RSScreenNewImage(RSScreen *screen, int width, int height) {
+  if (screen->numImages == RSSCREEN_MAX_IMAGES) return (RSImage){-1, -1, -1};
+
   RSImage img;
   img.width = width;
   img.height = height;
-  bool takenCodes[RSSCREEN_MAX_IMAGES];
-  memset(takenCodes, 0, RSSCREEN_MAX_IMAGES*sizeof(bool));
-  for (int i = 0; i < screen->numImages; ++i) {
-    takenCodes[screen->images[i].ref] = true;
-  }
 
-  RSImageCode code;
   for (int i = 0; i < RSSCREEN_MAX_IMAGES; ++i) {
-    if (!takenCodes[i]) {
-      code = i;
-      break;
-    }
+    if (screen->takenImages[i]) continue;
+
+    img.ref = i;
+    screen->takenImages[i] = true;
+    screen->numImages++;
+    screen->images[i] = img;
+    return img;
   }
 
-  img.ref = code;
+  // Couldn't find a spot
+  return (RSImage){-1, -1, -1};
+}
 
-  screen->images[screen->numImages++] = img;
+RSTexture RSScreenNewTexture(RSScreen *screen, int width, int height) {
+  if (screen->numTextures == RSSCREEN_MAX_TEXTURES) return (RSTexture){-1, -1, -1};
 
-  return img;
+  RSTexture img;
+  img.width = width;
+  img.height = height;
+
+  for (int i = 0; i < RSSCREEN_MAX_TEXTURES; ++i) {
+    if (screen->takenTextures[i]) continue;
+
+    img.ref = i;
+    screen->takenTextures[i] = true;
+    screen->numTextures++;
+    screen->textures[i] = img;
+    return img;
+  }
+
+  // Couldn't find a spot
+  return (RSTexture){-1, -1, -1};
 }

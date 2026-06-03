@@ -74,6 +74,7 @@ void RSScreenDrawSplineSegmentBezierCubic(RSScreen *screen, Vector2 p1, Vector2 
 
 // R_TEXTURES
 RSImage RSScreenGenImageColor(RSScreen *screen, int width, int height, Color color);
+RSTexture RSScreenLoadTextureFromImage(RSScreen *screen, RSImage image);
 
 // R_TEXT
 void RSScreenDrawFPS(RSScreen *screen, int posX, int posY);

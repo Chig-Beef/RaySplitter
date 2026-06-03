@@ -66,6 +66,14 @@ char *argFromRectangle(Rectangle rect) {
   return buffer;
 }
 
+char *argFromImage(RSImage img) {
+  return argFromInt(img.ref);
+}
+
+char *argFromTexture(RSTexture tex) {
+  return argFromInt(tex.ref);
+}
+
 char *stringifyRawArg(void *v, RSArgType t) {
   switch (t) {
     case AT_INT:
@@ -80,6 +88,10 @@ char *stringifyRawArg(void *v, RSArgType t) {
       return argFromVector2(*(Vector2*)v);
     case AT_RECTANGLE:
       return argFromRectangle(*(Rectangle*)v);
+    case AT_IMAGE:
+      return argFromImage(*(RSImage*)v);
+    case AT_TEXTURE:
+      return argFromTexture(*(RSTexture*)v);
 
     default: // Bad type
       return NULL;
@@ -152,6 +164,7 @@ RSArgType funcArgTypes[RS_NUM_FUNCS][10] = {
   {AT_VECTOR2, AT_VECTOR2, AT_VECTOR2, AT_FLOAT, AT_COLOR}, // FC_DRAW_SPLINE_SEGMENT_BEZIER_QUADRATIC
   {AT_VECTOR2, AT_VECTOR2, AT_VECTOR2, AT_VECTOR2, AT_FLOAT, AT_COLOR}, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
   {AT_INT, AT_INT, AT_COLOR}, // FC_GEN_IMAGE_COLOR
+  {AT_IMAGE}, // FC_LOAD_TEXTURE_FROM_IMAGE
   {AT_INT, AT_INT}, // FC_DRAW_FPS
   {AT_STRING, AT_INT, AT_INT, AT_INT, AT_COLOR}, // FC_DRAW_TEXT
   {AT_INT}, // FC_SET_TEXT_LINE_SPACING
@@ -206,6 +219,7 @@ int funcArgc[RS_NUM_FUNCS] = {
   5, // FC_DRAW_SPLINE_SEGMENT_BEZIER_QUADRATIC
   6, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
   3, // FC_GEN_IMAGE_COLOR
+  1, // FC_LOAD_TEXTURE_FROM_IMAGE
   2, // FC_DRAW_FPS
   5, // FC_DRAW_TEXT
   1, // FC_SET_TEXT_LINE_SPACING
@@ -547,6 +561,14 @@ RSImage RSScreenGenImageColor(RSScreen *screen, int width, int height, Color col
   RSDeployCommand(screen, func, argv);
 
   return RSScreenNewImage(screen, width, height);
+}
+
+RSTexture RSScreenLoadTextureFromImage(RSScreen *screen, RSImage image) {
+  const FuncCode func = FC_LOAD_TEXTURE_FROM_IMAGE;
+  void *argv[1] = {&image};
+  RSDeployCommand(screen, func, argv);
+
+  return RSScreenNewTexture(screen, image.width, image.height);
 }
 
 // R_TEXT
