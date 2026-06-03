@@ -26,6 +26,9 @@ errno_t RSScreenInit(RSScreen *screen) {
   // Empty queue
   screen->commandQueueLen = 0;
 
+  // No images
+  screen->numImages = 0;
+
   return 0;
 }
 
@@ -157,4 +160,29 @@ void RSScreenQueuePush(RSScreen *screen, RSCommand cmd) {
   }
 
   screen->commandQueue[screen->commandQueueLen++] = cmd;
+}
+
+RSImage RSScreenNewImage(RSScreen *screen, int width, int height) {
+  RSImage img;
+  img.width = width;
+  img.height = height;
+  bool takenCodes[RSSCREEN_MAX_IMAGES];
+  memset(takenCodes, 0, RSSCREEN_MAX_IMAGES*sizeof(bool));
+  for (int i = 0; i < screen->numImages; ++i) {
+    takenCodes[screen->images[i].ref] = true;
+  }
+
+  RSImageCode code;
+  for (int i = 0; i < RSSCREEN_MAX_IMAGES; ++i) {
+    if (!takenCodes[i]) {
+      code = i;
+      break;
+    }
+  }
+
+  img.ref = code;
+
+  screen->images[screen->numImages++] = img;
+
+  return img;
 }

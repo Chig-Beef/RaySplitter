@@ -151,6 +151,7 @@ RSArgType funcArgTypes[RS_NUM_FUNCS][10] = {
   {AT_VECTOR2, AT_VECTOR2, AT_VECTOR2, AT_VECTOR2, AT_FLOAT, AT_COLOR}, // FC_DRAW_SPLINE_SEGMENT_CATMULL_ROM
   {AT_VECTOR2, AT_VECTOR2, AT_VECTOR2, AT_FLOAT, AT_COLOR}, // FC_DRAW_SPLINE_SEGMENT_BEZIER_QUADRATIC
   {AT_VECTOR2, AT_VECTOR2, AT_VECTOR2, AT_VECTOR2, AT_FLOAT, AT_COLOR}, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
+  {AT_INT, AT_INT, AT_COLOR}, // FC_GEN_IMAGE_COLOR
   {AT_INT, AT_INT}, // FC_DRAW_FPS
   {AT_STRING, AT_INT, AT_INT, AT_INT, AT_COLOR}, // FC_DRAW_TEXT
   {AT_INT}, // FC_SET_TEXT_LINE_SPACING
@@ -204,6 +205,7 @@ int funcArgc[RS_NUM_FUNCS] = {
   6, // FC_DRAW_SPLINE_SEGMENT_CATMULL_ROM
   5, // FC_DRAW_SPLINE_SEGMENT_BEZIER_QUADRATIC
   6, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
+  3, // FC_GEN_IMAGE_COLOR
   2, // FC_DRAW_FPS
   5, // FC_DRAW_TEXT
   1, // FC_SET_TEXT_LINE_SPACING
@@ -539,6 +541,13 @@ void RSScreenDrawSplineSegmentBezierCubic(RSScreen *screen, Vector2 p1, Vector2 
 
 
 // R_TEXTURES
+RSImage RSScreenGenImageColor(RSScreen *screen, int width, int height, Color color) {
+  const FuncCode func = FC_GEN_IMAGE_COLOR;
+  void *argv[3] = {&width, &height, &color};
+  RSDeployCommand(screen, func, argv);
+
+  return RSScreenNewImage(screen, width, height);
+}
 
 // R_TEXT
 void RSScreenDrawFPS(RSScreen *screen, int posX, int posY) {

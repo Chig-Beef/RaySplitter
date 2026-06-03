@@ -3,8 +3,10 @@
 
 #include "winray.h"
 #include "RScommand.h"
+#include "RSImage.h"
 
 #define RSSCREEN_QUEUE_MAX_LEN 100
+#define RSSCREEN_MAX_IMAGES 100
 
 // Holds all the info for a given screen
 typedef struct {
@@ -12,6 +14,10 @@ typedef struct {
   int width;
   int height;
   char *title;
+
+  // The registered images for this screen
+  RSImage images[RSSCREEN_MAX_IMAGES];
+  int numImages;
 
   // The queue to hold command info
   RSCommand commandQueue[RSSCREEN_QUEUE_MAX_LEN];
@@ -35,5 +41,7 @@ errno_t RSScreenFrame(RSScreen *screen);
 bool RSScreenQueueFull(RSScreen *screen);
 
 void RSScreenQueuePush(RSScreen *screen, RSCommand cmd);
+
+RSImage RSScreenNewImage(RSScreen *screen, int width, int height);
 
 #endif

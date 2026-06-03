@@ -1,9 +1,45 @@
+#include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "Commands.h"
 #include "../RaySplitter/winray.h"
+
+typedef struct {
+  RSImageCode ref;
+  Image img;
+} ImageRef;
+
+ImageRef images[RSSCREEN_MAX_IMAGES];
+int numImages = 0;
+
+void registerImage(Image img) {
+  printf("A\n");
+  bool takenCodes[RSSCREEN_MAX_IMAGES];
+  memset(takenCodes, 0, RSSCREEN_MAX_IMAGES*sizeof(bool));
+  for (int i = 0; i < numImages; ++i) {
+    takenCodes[images[i].ref] = true;
+  }
+  printf("B\n");
+
+  RSImageCode code;
+  for (int i = 0; i < RSSCREEN_MAX_IMAGES; ++i) {
+    if (!takenCodes[i]) {
+      code = i;
+      break;
+    }
+  }
+  printf("C\n");
+
+  ImageRef ref;
+  ref.ref = code;
+  ref.img = img;
+  printf("D\n");
+
+  images[numImages++] = ref;
+  printf("E\n");
+}
 
 int argToInt(char *arg) {
   return atoi(arg);
@@ -541,6 +577,13 @@ void drawSplineSegmentBezierCubicWrapper(void **argv) {
 
 
 // R_TEXTURES
+void genImageColorWrapper(void **argv) {
+  int width = *(int*)argv[0];
+  int height = *(int*)argv[1];
+  Color color = *(Color*)argv[2];
+  Image img = GenImageColor(width, height, color);
+  registerImage(img);
+}
 
 // R_TEXT
 void drawFpsWrapper(void **argv) {
@@ -616,6 +659,7 @@ FuncWrapper funcs[RS_NUM_FUNCS] = {
   drawSplineSegmentCatmullRomWrapper, // FC_DRAW_SPLINE_SEGMENT_CATMULL_ROM
   drawSplineSegmentBezierQuadraticWrapper, // FC_DRAW_SPLINE_SEGMENT_BEZIER_QUADRATIC
   drawSplineSegmentBezierCubicWrapper, // FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC
+  genImageColorWrapper, // FC_GEN_IMAGE_COLOR
   drawFpsWrapper, // FC_DRAW_FPS
   drawTextWrapper, // FC_DRAW_TEXT
   setTextLineSpacingWrapper, // FC_SET_TEXT_LINE_SPACING

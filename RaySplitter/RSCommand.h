@@ -70,6 +70,7 @@ typedef enum {
   FC_DRAW_SPLINE_SEGMENT_BEZIER_CUBIC,
 
   // R_TEXTURES
+  FC_GEN_IMAGE_COLOR,
 
   // R_TEXT
   FC_DRAW_FPS,
@@ -81,7 +82,7 @@ typedef enum {
   // R_AUDIO
 } FuncCode;
 
-#define RS_NUM_FUNCS 50
+#define RS_NUM_FUNCS 51
 
 // A single instruction for the target machine
 typedef struct {

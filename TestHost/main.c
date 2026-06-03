@@ -23,6 +23,8 @@ int main() {
   RSRegisterScreen(&screenA);
   RSRegisterScreen(&screenB);
 
+  RSImage img = RSScreenGenImageColor(&screenA, 50, 50, ORANGE);
+
   // Start logic loop
   printf("Starting loop\n");
   bool running = true;
