@@ -116,6 +116,51 @@ Rectangle argToRectangle(char *arg) {
   return r;
 }
 
+void *parseArg(char *arg, RSArgType t) {
+  void *stackPtr;
+  int size;
+
+  switch (t) {
+    case AT_INT:
+      int i = argToInt(arg);
+      stackPtr = &i;
+      size = sizeof(int);
+
+    case AT_COLOR:
+      Color c = argToColor(arg);
+      stackPtr = &c;
+      size = sizeof(Color);
+
+    case AT_FLOAT:
+      float f = argToFloat(arg);
+      stackPtr = &f;
+      size = sizeof(float);
+
+    case AT_STRING:
+      char *s = argToString(arg);
+      stackPtr = &s;
+      size = sizeof(char *);
+
+    case AT_VECTOR2:
+      Vector2 v = argToVector2(arg);
+      stackPtr = &v;
+      size = sizeof(Vector2);
+
+    case AT_RECTANGLE:
+      Rectangle r = argToRectangle(arg);
+      stackPtr = &r;
+      size = sizeof(Rectangle);
+
+    default:
+      printf("Bad arg type\n");
+      return NULL;
+  }
+
+  void *out = malloc(size);
+  memcpy(out, stackPtr, size);
+  return out;
+}
+
 void drawRectangleWrapper(int argc, char **argv) {
   if (argc != 5) {
     printf("Bad num of args!\n");

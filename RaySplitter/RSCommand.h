@@ -3,6 +3,16 @@
 
 #include <corecrt.h>
 
+typedef enum {
+  AT_INT,
+  AT_COLOR,
+  AT_FLOAT,
+  AT_STRING,
+  AT_VECTOR2,
+  AT_RECTANGLE,
+} RSArgType;
+
+
 // TODO: Add funcs that return values
 // TODO: Add funcs that ref images/textures/fonts
 // TODO: Add funcs that have array parms
